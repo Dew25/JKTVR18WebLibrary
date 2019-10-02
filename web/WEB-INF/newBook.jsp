@@ -15,10 +15,10 @@
         <h1>Новая книга</h1>
         <p>${info}</p>
         <form action="addBook" method="POST">
-            Название книги: <input type="text" name="title"><br>
-            Автор книги: <input type="text" name="author"><br>
-            Год издания книги: <input type="text" name="year"><br>
-            Количество экземпляров: <input type="text" name="quantity"><br>
+            Название книги: <input type="text" name="title" value="${book.title}"><br>
+            Автор книги: <input type="text" name="author" value="${book.author}"><br>
+            Год издания книги: <input type="text" name="year" value="${book.year}"><br>
+            Количество экземпляров: <input type="text" name="quantity" value="${book.quantity}"><br>
             <input type="submit" value="Добавить новую книгу">
         </form>
     </body>

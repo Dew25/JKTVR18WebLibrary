@@ -14,7 +14,8 @@
     <body>
         <h1>Hello World!</h1>
         <p>${info}</p>
+        <p>${param1}</p>
         <p>${param2}</p>
-        <a href="page3?param=эта информация со странички page3&param2=Это параметр 2">Моя информация</a>
+        <a href="page3?param1=эта информация со странички page3&param2=Это параметр 2">Моя информация</a>
     </body>
 </html>

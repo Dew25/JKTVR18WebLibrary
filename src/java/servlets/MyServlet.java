@@ -6,12 +6,15 @@
 package servlets;
 
 import entity.Book;
+import entity.Reader;
 import java.io.IOException;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import session.BookFacade;
 
 /**
  *
@@ -20,11 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "MyServlet", urlPatterns = {
     "/newBook",
     "/addBook",
+    "/newReader",
+    "/addReader",
     "/page2",
     "/page3"
 })
 public class MyServlet extends HttpServlet {
-
+    @EJB private BookFacade bookFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -50,9 +55,33 @@ public class MyServlet extends HttpServlet {
                 String author = request.getParameter("author");
                 String year = request.getParameter("year");
                 String quantity = request.getParameter("quantity");
-                Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(quantity));
-                request.setAttribute("info", book);
+                try{
+                    Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(quantity));
+                    request.setAttribute("book", book);
+                    bookFacade.create(book);
+                }catch(NumberFormatException e){
+                    request.setAttribute("info", "Некорректные данные");
+                }
                 request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/newReader":
+                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
+                        .forward(request, response);
+                break;
+            case "/addReader":
+                String name = request.getParameter("name");
+                String lastname = request.getParameter("lastname");
+                String day = request.getParameter("day");
+                String month = request.getParameter("month");
+                year = request.getParameter("year");
+                try{
+                    Reader reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+                    request.setAttribute("reader", reader);
+                }catch(NumberFormatException e){
+                    request.setAttribute("info", "Не корректные данные");
+                }
+                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
                         .forward(request, response);
                 break;
             case "/page2":
@@ -60,10 +89,11 @@ public class MyServlet extends HttpServlet {
                         .forward(request, response);
                 break;
             case "/page3":
-                String param = request.getParameter("param");
+                String param1 = request.getParameter("param1");
                 String param2 = request.getParameter("param2");
-                //String str = "Эти данные пришли с сервлета";
-                request.setAttribute("info", param);
+                String str = "Привет из сервлета";
+                request.setAttribute("info", str);
+                request.setAttribute("param1", param1);
                 request.setAttribute("param2", param2);
                 request.getRequestDispatcher("/page3.jsp")
                         .forward(request, response);

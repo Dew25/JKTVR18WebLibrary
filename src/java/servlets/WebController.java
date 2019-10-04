@@ -6,8 +6,11 @@
 package servlets;
 
 import entity.Book;
+import entity.History;
 import entity.Reader;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,21 +18,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import session.BookFacade;
+import session.HistoryFacade;
+import session.ReaderFacade;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "MyServlet", urlPatterns = {
+@WebServlet(name = "WebController", urlPatterns = {
     "/newBook",
     "/addBook",
     "/newReader",
     "/addReader",
-    "/page2",
-    "/page3"
+    "/takeOnBook",
+    "/createHistory",
+    "/returnBook",
+    "/returnOnBook",    
 })
-public class MyServlet extends HttpServlet {
+public class WebController extends HttpServlet {
     @EJB private BookFacade bookFacade;
+    @EJB private ReaderFacade readerFacade;
+    @EJB private HistoryFacade historyFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -78,24 +87,62 @@ public class MyServlet extends HttpServlet {
                 try{
                     Reader reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
                     request.setAttribute("reader", reader);
+                    readerFacade.create(reader);
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Не корректные данные");
                 }
                 request.getRequestDispatcher("/WEB-INF/newReader.jsp")
                         .forward(request, response);
                 break;
-            case "/page2":
-                request.getRequestDispatcher("/WEB-INF/page2.jsp")
+            case "/takeOnBook":
+                List<Book> listBooks = bookFacade.findEnabledBooks();
+                List<Reader> listReaders = readerFacade.findAll();
+                request.setAttribute("listBooks", listBooks);
+                request.setAttribute("listReaders", listReaders);
+                request.getRequestDispatcher("/WEB-INF/takeOnBook.jsp")
                         .forward(request, response);
                 break;
-            case "/page3":
-                String param1 = request.getParameter("param1");
-                String param2 = request.getParameter("param2");
-                String str = "Привет из сервлета";
-                request.setAttribute("info", str);
-                request.setAttribute("param1", param1);
-                request.setAttribute("param2", param2);
-                request.getRequestDispatcher("/page3.jsp")
+            case "/createHistory":
+                String bookId = request.getParameter("bookId");
+                String readerId = request.getParameter("readerId");
+                try{
+                    Book book = bookFacade.find(Long.parseLong(bookId));
+                    if(book.getQuantity()>0){
+                        Reader reader = readerFacade.find(Long.parseLong(readerId));
+                        book.setQuantity(book.getQuantity()-1);
+                        bookFacade.edit(book);
+                        History history = new History();
+                        history.setBook(book);
+                        history.setReader(reader);
+                        history.setTakeOnDate(new Date());
+                        historyFacade.create(history);
+                        request.setAttribute("info", "Книга выдана");
+                    }else{
+                        request.setAttribute("info", "Этой книги нет в наличии");
+                    }
+                    
+                }catch(NumberFormatException e){
+                    request.setAttribute("info", "Не корректные данные");
+                }
+                request.getRequestDispatcher("/takeOnBook")
+                        .forward(request, response);
+                break;
+            case "/returnBook":
+                List<History> listHistories = historyFacade.findNotReturnBook();
+                request.setAttribute("listHistories", listHistories);
+                request.getRequestDispatcher("/WEB-INF/returnBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/returnOnBook":
+                String historiId = request.getParameter("historyId");
+                History history  = historyFacade.find(Long.parseLong(historiId));
+                Book book = history.getBook();
+                book.setQuantity(book.getQuantity()+1);
+                bookFacade.edit(book);
+                history.setReturnDate(new Date());
+                historyFacade.edit(history);
+                request.setAttribute("info", "Книга возвращена!");
+                request.getRequestDispatcher("/returnBook")
                         .forward(request, response);
                 break;
         }

@@ -33,7 +33,9 @@ import session.ReaderFacade;
     "/takeOnBook",
     "/createHistory",
     "/returnBook",
-    "/returnOnBook",    
+    "/returnOnBook", 
+    "/showListAllBooks",
+    "/changeActiveBook",
 })
 public class WebController extends HttpServlet {
     @EJB private BookFacade bookFacade;
@@ -143,6 +145,25 @@ public class WebController extends HttpServlet {
                 historyFacade.edit(history);
                 request.setAttribute("info", "Книга возвращена!");
                 request.getRequestDispatcher("/returnBook")
+                        .forward(request, response);
+                break;
+            case "/showListAllBooks":
+                List<Book> listAllBooks = bookFacade.findAll();
+                request.setAttribute("listAllBooks", listAllBooks);
+                request.getRequestDispatcher("/WEB-INF/listAllBooks.jsp")
+                        .forward(request, response);
+                break;
+            case "/changeActiveBook":
+                bookId = request.getParameter("bookId");
+                String active = request.getParameter("active");
+                book = bookFacade.find(Long.parseLong(bookId));
+                if("true".equals(active)){
+                    book.setActive(false);
+                }else{
+                    book.setActive(true);
+                }
+                bookFacade.edit(book);
+                request.getRequestDispatcher("/showListAllBooks")
                         .forward(request, response);
                 break;
         }

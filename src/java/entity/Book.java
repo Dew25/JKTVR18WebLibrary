@@ -28,6 +28,7 @@ public class Book implements Serializable{
     private String author;
     private int year;
     private int quantity;
+    private boolean active;
 
     public Book() {
     }
@@ -37,6 +38,7 @@ public class Book implements Serializable{
         this.author = author;
         this.year = year;
         this.quantity = quantity;
+        this.active = true;
     }
 
     
@@ -66,17 +68,6 @@ public class Book implements Serializable{
         return title;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" 
-                + "id=" + id 
-                + ", title=" + title 
-                + ", author=" + author 
-                + ", year=" + year 
-                + ", quantity="+ quantity
-                + '}';
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -91,6 +82,27 @@ public class Book implements Serializable{
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" 
+                + "id=" + id 
+                + ", title=" + title 
+                + ", author=" + author 
+                + ", year=" + year 
+                + ", quantity=" 
+                + quantity + ", active=" 
+                + active 
+                + '}';
     }
     
 }

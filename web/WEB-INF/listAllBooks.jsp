@@ -14,6 +14,7 @@
     </head>
     <body>
         <h1>Книги библиотеки:</h1>
+        <a href="index.jsp">Главная страница</a>
             <ul>
                 <c:forEach var="book" items="${listAllBooks}" varStatus="num">
                     <li>

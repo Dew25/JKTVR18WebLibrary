@@ -8,6 +8,7 @@ package servlets;
 import entity.Book;
 import entity.History;
 import entity.Reader;
+import entity.User;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
+import session.UserFacade;
 
 /**
  *
@@ -41,6 +43,7 @@ public class WebController extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
+    @EJB private UserFacade userFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -68,12 +71,14 @@ public class WebController extends HttpServlet {
                 String quantity = request.getParameter("quantity");
                 try{
                     Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(quantity));
-                    request.setAttribute("book", book);
                     bookFacade.create(book);
+                    request.setAttribute("book", book);
+                    request.setAttribute("info", "Книга "+book.getTitle()+" добавлена!");
+                    
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Некорректные данные");
                 }
-                request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;
             case "/newReader":
@@ -86,14 +91,28 @@ public class WebController extends HttpServlet {
                 String day = request.getParameter("day");
                 String month = request.getParameter("month");
                 year = request.getParameter("year");
-                try{
-                    Reader reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
-                    request.setAttribute("reader", reader);
-                    readerFacade.create(reader);
-                }catch(NumberFormatException e){
-                    request.setAttribute("info", "Не корректные данные");
+                String login = request.getParameter("login");
+                String password1 = request.getParameter("password1");
+                String password2 = request.getParameter("password2");
+                if(!password1.equals(password2)){
+                    request.setAttribute("info", "Некорректные данные");
+                    request.getRequestDispatcher("/index.jsp")
+                        .forward(request, response);
+                    break;
                 }
-                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
+                Reader reader=null;
+                try{
+                    reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+                    readerFacade.create(reader);
+                    User user = new User(login,password1,reader);
+                    userFacade.create(user);
+                    request.setAttribute("reader", reader);
+                    request.setAttribute("info", "Читатель "+reader.getName()+" "+reader.getLastname()+" добавлен");
+                }catch(NumberFormatException e){
+                    readerFacade.remove(reader);
+                    request.setAttribute("info", "Некорректные данные");
+                }
+                request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;
             case "/takeOnBook":
@@ -110,7 +129,7 @@ public class WebController extends HttpServlet {
                 try{
                     Book book = bookFacade.find(Long.parseLong(bookId));
                     if(book.getQuantity()>0){
-                        Reader reader = readerFacade.find(Long.parseLong(readerId));
+                        reader = readerFacade.find(Long.parseLong(readerId));
                         book.setQuantity(book.getQuantity()-1);
                         bookFacade.edit(book);
                         History history = new History();

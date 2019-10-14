@@ -14,10 +14,7 @@
     </head>
     <body>
         <h1>Выдать книгу</h1>
-<<<<<<< Updated upstream
-=======
         <a href="index.html">Главная страница</a>
->>>>>>> Stashed changes
         <p>${info}</p>
         Список книг:<br>
         <form action="createHistory" method="POST">

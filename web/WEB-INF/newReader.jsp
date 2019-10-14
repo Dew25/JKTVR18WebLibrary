@@ -21,6 +21,9 @@
             День рождения: <input type="text" name="day" value="${reader.day}"><br>
             Месяц рождения: <input type="text" name="month" value="${reader.month}"><br>
             Год рождения: <input type="text" name="year" value="${reader.year}"><br>
+            Логин: <input type="text" name="login" value=""><br>
+            Пароль: <input type="password" name="password1" value=""><br>
+            Повторить пароль: <input type="password" name="password2" value=""><br>
             <input type="submit" value="Добавить нового читателя">
         </form>
     </body>

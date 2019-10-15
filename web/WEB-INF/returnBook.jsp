@@ -16,7 +16,7 @@
         <h1>Вернуть книгу</h1>
 <<<<<<< Updated upstream
 =======
-        <a href="index.html">Главная страница</a>
+        <a href="index.jsp">Главная страница</a>
 >>>>>>> Stashed changes
         <p>${info}</p>
         Список книг:<br>

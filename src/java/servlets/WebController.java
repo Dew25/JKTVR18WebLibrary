@@ -22,6 +22,7 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
+import util.EncryptPass;
 
 /**
  *
@@ -104,7 +105,10 @@ public class WebController extends HttpServlet {
                 try{
                     reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
                     readerFacade.create(reader);
-                    User user = new User(login,password1,reader);
+                    EncryptPass ep = new EncryptPass();
+                    String salts = ep.createSalts();
+                    String encryptPassword = ep.setEncryptPass(password1, salts);
+                    User user = new User(login,encryptPassword,salts,reader);
                     userFacade.create(user);
                     request.setAttribute("reader", reader);
                     request.setAttribute("info", "Читатель "+reader.getName()+" "+reader.getLastname()+" добавлен");

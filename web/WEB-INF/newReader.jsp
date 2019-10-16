@@ -16,12 +16,12 @@
         <a href="index.jsp">Главная страница</a>
         <p>${info}</p>
         <form action="addReader" method="POST">
-            Имя читателя: <input type="text" name="name" value="${reader.name}"><br>
-            Фамилия читателя: <input type="text" name="lastname" value="${reader.lastname}"><br>
-            День рождения: <input type="text" name="day" value="${reader.day}"><br>
-            Месяц рождения: <input type="text" name="month" value="${reader.month}"><br>
-            Год рождения: <input type="text" name="year" value="${reader.year}"><br>
-            Логин: <input type="text" name="login" value=""><br>
+            Имя читателя: <input type="text" name="name" value="${name}"><br>
+            Фамилия читателя: <input type="text" name="lastname" value="${lastname}"><br>
+            День рождения: <input type="text" name="day" value="${day}"><br>
+            Месяц рождения: <input type="text" name="month" value="${month}"><br>
+            Год рождения: <input type="text" name="year" value="${year}"><br>
+            Логин: <input type="text" name="login" value="${login}"><br>
             Пароль: <input type="password" name="password1" value=""><br>
             Повторить пароль: <input type="password" name="password2" value=""><br>
             <input type="submit" value="Добавить нового читателя">

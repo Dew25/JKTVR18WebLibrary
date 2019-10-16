@@ -95,9 +95,16 @@ public class WebController extends HttpServlet {
                 String login = request.getParameter("login");
                 String password1 = request.getParameter("password1");
                 String password2 = request.getParameter("password2");
+                request.setAttribute("name", name);
+                request.setAttribute("lastname", lastname);
+                request.setAttribute("day", day);
+                request.setAttribute("month", month);
+                request.setAttribute("year", year);
+                request.setAttribute("login", login);
+                
                 if(!password1.equals(password2)){
                     request.setAttribute("info", "Некорректные данные");
-                    request.getRequestDispatcher("/index.jsp")
+                    request.getRequestDispatcher("/newReader")
                         .forward(request, response);
                     break;
                 }
@@ -109,8 +116,15 @@ public class WebController extends HttpServlet {
                     String salts = ep.createSalts();
                     String encryptPassword = ep.setEncryptPass(password1, salts);
                     User user = new User(login,encryptPassword,salts,reader);
-                    userFacade.create(user);
-                    request.setAttribute("reader", reader);
+                    try {
+                        userFacade.create(user);
+                    } catch (Exception e) {
+                        readerFacade.remove(reader);
+                        request.setAttribute("info", "Некорректные данные");
+                        request.getRequestDispatcher("/newReader")
+                        .forward(request, response);
+                        break;
+                    }
                     request.setAttribute("info", "Читатель "+reader.getName()+" "+reader.getLastname()+" добавлен");
                 }catch(NumberFormatException e){
                     readerFacade.remove(reader);

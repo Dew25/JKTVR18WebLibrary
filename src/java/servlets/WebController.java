@@ -103,7 +103,7 @@ public class WebController extends HttpServlet {
                 request.setAttribute("login", login);
                 
                 if(!password1.equals(password2)){
-                    request.setAttribute("info", "Некорректные данные");
+                    request.setAttribute("info", "Несовпадают пароли");
                     request.getRequestDispatcher("/newReader")
                         .forward(request, response);
                     break;
@@ -120,7 +120,7 @@ public class WebController extends HttpServlet {
                         userFacade.create(user);
                     } catch (Exception e) {
                         readerFacade.remove(reader);
-                        request.setAttribute("info", "Некорректные данные");
+                        request.setAttribute("info", "Такой пользователь уже существует");
                         request.getRequestDispatcher("/newReader")
                         .forward(request, response);
                         break;

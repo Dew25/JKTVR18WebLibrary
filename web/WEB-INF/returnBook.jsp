@@ -14,10 +14,7 @@
     </head>
     <body>
         <h1>Вернуть книгу</h1>
-<<<<<<< Updated upstream
-=======
         <a href="index.jsp">Главная страница</a>
->>>>>>> Stashed changes
         <p>${info}</p>
         Список книг:<br>
         <form action="returnOnBook" method="POST">

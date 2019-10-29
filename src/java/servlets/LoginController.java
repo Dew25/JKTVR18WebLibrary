@@ -9,7 +9,6 @@ import entity.Book;
 import entity.Reader;
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;

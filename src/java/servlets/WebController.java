@@ -7,7 +7,6 @@ package servlets;
 
 import entity.Book;
 import entity.History;
-import entity.Reader;
 import entity.User;
 import java.io.IOException;
 import java.util.Date;
@@ -23,7 +22,6 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
-import util.EncryptPass;
 
 /**
  *
@@ -38,6 +36,9 @@ import util.EncryptPass;
     "/returnOnBook", 
     
     "/changeActiveBook",
+    "/editBook",
+    "/changeBook",
+    
 })
 public class WebController extends HttpServlet {
     @EJB private BookFacade bookFacade;
@@ -131,6 +132,45 @@ public class WebController extends HttpServlet {
                 }
                 bookFacade.edit(book);
                 request.getRequestDispatcher("/showListAllBooks")
+                        .forward(request, response);
+                break;
+            case "/showBook":
+                bookId = request.getParameter("bookId");
+                book = bookFacade.find(Long.parseLong(bookId));
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("/WEB-INF/showBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/editBook":
+                bookId = request.getParameter("bookId");
+                book = bookFacade.find(Long.parseLong(bookId));
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("/WEB-INF/editBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/changeBook":
+                bookId = request.getParameter("bookId");
+                title = request.getParameter("title");
+                author = request.getParameter("author");
+                year = request.getParameter("year");
+                quantity = request.getParameter("quantity");
+                String activeOn = request.getParameter("active");
+                boolean activeBook;
+                if("on".equals(activeOn)){
+                    activeBook = true;
+                }else{
+                    activeBook = false;
+                }
+                book = bookFacade.find(Long.parseLong(bookId));
+                book.setActive(activeBook);
+                book.setAuthor(author);
+                book.setQuantity(Integer.parseInt(quantity));
+                book.setTitle(title);
+                book.setYear(Integer.parseInt(year));
+                bookFacade.edit(book);
+                request.setAttribute("book", book);
+                request.setAttribute("info", "Книга отредактирована");
+                 request.getRequestDispatcher("/WEB-INF/editBook.jsp")
                         .forward(request, response);
                 break;
         }

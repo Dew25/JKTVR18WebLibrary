@@ -31,7 +31,8 @@ public class HistoryFacade extends AbstractFacade<History> {
     }
 
     public List<History> findNotReturnBook() {
-        return em.createQuery("SELECT h FROM History h WHERE h.returnDate = null")
+        return em.createQuery("SELECT h FROM History h WHERE h.returnDate = :returnDate")
+                .setParameter("returnDate", null)
                 .getResultList();
     }
     

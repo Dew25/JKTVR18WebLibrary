@@ -10,7 +10,6 @@ import entity.History;
 import entity.Reader;
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -32,6 +31,7 @@ import session.UserFacade;
 @WebServlet(name = "UserController", urlPatterns = {
     "/takeOnBook",
     "/createHistory",
+    "/showBook",
 
 })
 public class UserController extends HttpServlet {
@@ -99,6 +99,13 @@ public class UserController extends HttpServlet {
                     request.setAttribute("info", "Не корректные данные");
                 }
                 request.getRequestDispatcher("/takeOnBook")
+                        .forward(request, response);
+                break;
+            case "/showBook":
+                bookId = request.getParameter("bookId");
+                Book book = bookFacade.find(Long.parseLong(bookId));
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("/WEB-INF/showBook.jsp")
                         .forward(request, response);
                 break;
         }

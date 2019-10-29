@@ -18,8 +18,19 @@
             <ul>
                 <c:forEach var="book" items="${listAllBooks}" varStatus="num">
                     <li>
-                        ${num.index}. ${book.title}. Автор: ${book.author}. ${book.year}
-                        <c:if test="${book.active eq true}">активно</c:if><c:if test="${book.active ne true}">не активно</c:if> <a href="changeActiveBook?bookId=${book.id}&active=${book.active}">Изменить</a>
+                        ${num.index + 1}. ${book.title}. Автор: ${book.author}. ${book.year}
+                        <c:if test="${'ivan' eq user.login}">
+                            <c:if test="${book.active eq true}">
+                                активно <a href="changeActiveBook?bookId=${book.id}&active=${book.active}">Деактивировать</a>
+                            </c:if>
+                            <c:if test="${book.active ne true}">
+                                не активно <a href="changeActiveBook?bookId=${book.id}&active=${book.active}">Активировать</a>
+                            </c:if> 
+                            
+                        </c:if>
+                        <c:if test="${user ne null}">
+                            <a href="showBook?bookId=${book.id}">Читать</a>
+                        </c:if>
                     </li>
                 </c:forEach>
             </ul>

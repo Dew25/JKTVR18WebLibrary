@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Новая книга</h1>
-        <a href="index.jsp">Главная страница</a>
+        <a href="index">Главная страница</a>
         <p>${info}</p>
         <form action="changeBook" method="POST">
             <input type="hidden" name="bookId" value="${book.id}">

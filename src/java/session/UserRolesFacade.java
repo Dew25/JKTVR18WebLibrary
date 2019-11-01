@@ -5,7 +5,10 @@
  */
 package session;
 
+import entity.Roles;
+import entity.User;
 import entity.UserRoles;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,16 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
 
     public UserRolesFacade() {
         super(UserRoles.class);
+    }
+
+    public List<Roles> findByUser(User user) {
+        try {
+            return em.createQuery("SELECT ur.role FROM UserRoles ur WHERE ur.user = :user")
+                    .setParameter("user", user)
+                    .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

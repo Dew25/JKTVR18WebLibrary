@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Вернуть книгу</h1>
-        <a href="index.jsp">Главная страница</a>
+        <a href="index">Главная страница</a>
         <p>${info}</p>
         Список книг:<br>
         <form action="returnOnBook" method="POST">

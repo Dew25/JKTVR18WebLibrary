@@ -14,14 +14,14 @@
     </head>
     <body>
         <h1>${book.title}</h1>
-        <a href="index.jsp">Главная страница</a><br>
+        <a href="index">Главная страница</a><br>
         Автор: ${book.author}<br>
         Год издания: ${book.year}<br>
         Количество экземпляров: ${book.quantity}<br>
         Доступность книги: <c:if test="${book.active == true}">доступна для читателей</c:if>
         <c:if test="${book.active == false}">неактивна</c:if>
         <br>
-        <c:if test="${'ivan' eq user.login}">
+        <c:if test="${'MANAGER' eq userRole || 'ADMIN' eq userRole}">
             <a href="editBook?bookId=${book.id}">Редактировать</a>
         </c:if>
     </body>

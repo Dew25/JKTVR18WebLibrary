@@ -11,7 +11,6 @@ import entity.Roles;
 import entity.User;
 import entity.UserRoles;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -27,12 +26,14 @@ import session.RolesFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
 import util.EncryptPass;
+import util.RoleManager;
 
 /**
  *
  * @author Melnikov
  */
 @WebServlet(name = "LoginController", loadOnStartup = 1, urlPatterns = {
+    "/index",
     "/showLogin",
     "/login",
     "/logout",
@@ -103,8 +104,26 @@ public class LoginController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         EncryptPass ep = new EncryptPass();
         HttpSession session = null;
+        RoleManager roleManager = new RoleManager();
         String path = request.getServletPath();
         switch (path) {
+            case "/index":
+                session = request.getSession(false);
+                User user=null;
+                String userRole = null;
+                if(session != null){
+                    user = (User) session.getAttribute("user");
+                    if(user != null){
+                        userRole = roleManager.getTopRole(user);
+                        request.setAttribute("info", "Пользователь " + user.getLogin() + " aвторизован");
+                    }
+                    request.setAttribute("userRole", userRole);
+                }
+                request.setAttribute("userRole", userRole);
+                
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                break;
             case "/showLogin":
                 request.getRequestDispatcher("/showLogin.jsp").forward(request, response);
                 break;
@@ -118,7 +137,7 @@ public class LoginController extends HttpServlet {
                     request.getRequestDispatcher("/showLogin.jsp").forward(request, response);
                     break;
                 }
-                User user = userFacade.findByLogin(login);
+                user = userFacade.findByLogin(login);
                 if(user == null){
                     request.setAttribute("info", "Неправильные данные");
                     request.getRequestDispatcher("/showLogin.jsp").forward(request, response);
@@ -133,6 +152,9 @@ public class LoginController extends HttpServlet {
                 }
                 session = request.getSession(true);
                 session.setAttribute("user", user);
+                roleManager = new RoleManager();
+                userRole = roleManager.getTopRole(user);
+                request.setAttribute("userRole", userRole);
                 request.setAttribute("info", "Пользователь " + user.getLogin() + " aвторизован");
                 request.setAttribute("user", user);
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -181,6 +203,13 @@ public class LoginController extends HttpServlet {
                     user = new User(login,encryptPassword,salts,reader);
                     try {
                         userFacade.create(user);
+                        UserRoles userRoles = new UserRoles();
+                        userRoles.setUser(user);
+                        Roles role = new Roles();
+                        role.setRole("USER");
+                        rolesFacade.create(role);
+                        userRoles.setRole(role);
+                        userRolesFacade.create(userRoles);
                     } catch (Exception e) {
                         readerFacade.remove(reader);
                         request.setAttribute("info", "Такой пользователь уже существует");

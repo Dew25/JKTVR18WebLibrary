@@ -28,7 +28,7 @@
             <a href="takeOnBook">Выдать книгу</a><br>
         </c:if>
         <br>
-        <c:if test="${null != user  && 'ivan' eq user.login}">
+        <c:if test="${'ADMIN' eq userRole}">
             <a href="newBook">Новая книга</a><br>
             
             <a href="returnBook">Вернуть книгу</a><br>

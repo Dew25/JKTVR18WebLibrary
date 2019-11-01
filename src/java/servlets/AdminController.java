@@ -22,25 +22,23 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
+import util.RoleManager;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "WebController", urlPatterns = {
+@WebServlet(name = "AdminController", urlPatterns = {
     "/newBook",
     "/addBook",
-    
-    
     "/returnBook",
     "/returnOnBook", 
-    
     "/changeActiveBook",
     "/editBook",
     "/changeBook",
     
 })
-public class WebController extends HttpServlet {
+public class AdminController extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
@@ -72,7 +70,8 @@ public class WebController extends HttpServlet {
                         .forward(request, response);
             return;
         }
-        if(!"ivan".equals(user.getLogin())){
+        RoleManager roleManager = new RoleManager();
+        if(!roleManager.isRoleUser("ADMIN",user)){
             request.setAttribute("info", "У вас нет прав");
             request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);

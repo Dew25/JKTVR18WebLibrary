@@ -23,6 +23,7 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
+import util.RoleManager;
 
 /**
  *
@@ -60,7 +61,8 @@ public class UserController extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
-        if(null == user){
+        RoleManager roleManager = new RoleManager();
+        if(!roleManager.isRoleUser("USER",user)){
             request.setAttribute("info", "У вас нет прав");
             request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
@@ -105,6 +107,9 @@ public class UserController extends HttpServlet {
                 bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
                 request.setAttribute("book", book);
+                roleManager = new RoleManager();
+                String userRole = roleManager.getTopRole(user);
+                request.setAttribute("userRole", userRole);
                 request.getRequestDispatcher("/WEB-INF/showBook.jsp")
                         .forward(request, response);
                 break;

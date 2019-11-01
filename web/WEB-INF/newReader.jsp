@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Запись читателя в библиотеку</h1>
-        <a href="index.jsp">Главная страница</a>
+        <a href="index">Главная страница</a>
         <p>${info}</p>
         <form action="addReader" method="POST">
             Имя читателя: <input type="text" name="name" value="${name}"><br>

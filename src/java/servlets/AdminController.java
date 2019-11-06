@@ -98,7 +98,7 @@ public class AdminController extends HttpServlet {
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Некорректные данные");
                 }
-                request.getRequestDispatcher("/index.jsp")
+                request.getRequestDispatcher("/index")
                         .forward(request, response);
                 break;
             case "/returnBook":

@@ -8,7 +8,9 @@ package servlets;
 import entity.Book;
 import entity.History;
 import entity.Reader;
+import entity.Roles;
 import entity.User;
+import entity.UserRoles;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
+import util.EncryptPass;
 import util.RoleManager;
 
 /**
@@ -33,6 +36,8 @@ import util.RoleManager;
     "/takeOnBook",
     "/createHistory",
     "/showBook",
+    "/showUserProfile",
+    "/changeReader",
 
 })
 public class UserController extends HttpServlet {
@@ -53,6 +58,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        EncryptPass ep = new EncryptPass();
         HttpSession session = request.getSession(false);
         if(null == session){
             request.setAttribute("info", "У вас нет прав");
@@ -113,6 +119,56 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/showBook.jsp")
                         .forward(request, response);
                 break;
+            case "/showUserProfile":
+                 request.setAttribute("user", user);
+                 request.getRequestDispatcher("/WEB-INF/showUserProfile.jsp")
+                        .forward(request, response);
+                break;
+            case "/changeReader":
+                String name = request.getParameter("name");
+                String lastname = request.getParameter("lastname");
+                String cash = request.getParameter("cash");
+                String day = request.getParameter("day");
+                String month = request.getParameter("month");
+                String year = request.getParameter("year");
+                String login = request.getParameter("login");
+                String password1 = request.getParameter("password1");
+                String password2 = request.getParameter("password2");
+                request.setAttribute("name", name);
+                request.setAttribute("lastname", lastname);
+                request.setAttribute("day", day);
+                request.setAttribute("month", month);
+                request.setAttribute("year", year);
+                request.setAttribute("login", login);
+                
+                if(!password1.equals(password2)){
+                    request.setAttribute("info", "Несовпадают пароли");
+                    request.getRequestDispatcher("/newReader")
+                        .forward(request, response);
+                    break;
+                }
+                Reader reader=null;
+                try{
+                    reader = readerFacade.find(user.getReader().getId());
+                    reader.setName(name);
+                    reader.setLastname(lastname);
+                    reader.setCash(Integer.parseInt(cash));
+                    reader.setDay(Integer.parseInt(day));
+                    reader.setMonth(Integer.parseInt(month));
+                    reader.setYear(Integer.parseInt(year));
+                    user.setLogin(login);
+                    String salts = ep.createSalts();
+                    String encryptPassword = ep.setEncryptPass(password1, salts);
+                    readerFacade.edit(reader);
+                    userFacade.edit(user);
+                    request.setAttribute("info", "Профиль читателя "+reader.getName()+" "+reader.getLastname()+" изменен");
+                }catch(NumberFormatException e){
+                    readerFacade.remove(reader);
+                    request.setAttribute("info", "Некорректные данные");
+                }
+                request.getRequestDispatcher("/index")
+                        .forward(request, response);
+                break;    
         }
     }
 

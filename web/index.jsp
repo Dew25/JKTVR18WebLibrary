@@ -17,9 +17,11 @@
         <p>${info}</p>
         <c:if test="${null == user}">
            <a href="showLogin">Войти</a><br>
+           
         </c:if> 
         <c:if test="${null != user}">
            <a href="logout">Выйти</a><br>
+           <a href="showUserProfile">Показать профиль пользователя</a><br>
         </c:if>
            <br>
         <a href="newReader">Регистрация</a><br>
@@ -30,7 +32,6 @@
         <br>
         <c:if test="${'ADMIN' eq userRole}">
             <a href="newBook">Новая книга</a><br>
-            
             <a href="returnBook">Вернуть книгу</a><br>
         </c:if>
     </body>

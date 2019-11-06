@@ -21,6 +21,7 @@
             День рождения: <input type="text" name="day" value="${day}"><br>
             Месяц рождения: <input type="text" name="month" value="${month}"><br>
             Год рождения: <input type="text" name="year" value="${year}"><br>
+            Кошелек: <input type="text" name="cash" value="${cash}"><br>
             Логин: <input type="text" name="login" value="${login}"><br>
             Пароль: <input type="password" name="password1" value=""><br>
             Повторить пароль: <input type="password" name="password2" value=""><br>

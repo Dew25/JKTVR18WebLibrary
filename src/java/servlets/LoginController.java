@@ -59,7 +59,7 @@ public class LoginController extends HttpServlet {
         }
         if(listUsers != null && !listUsers.isEmpty()) return;
         
-        Reader reader = new Reader(null, "Ivan", "Ivanov", 10, 10, 2000);
+        Reader reader = new Reader( "Ivan", "Ivanov", 300, 10, 10, 2000);
         readerFacade.create(reader);
         EncryptPass ep = new EncryptPass();
         String salts = ep.createSalts();
@@ -174,6 +174,7 @@ public class LoginController extends HttpServlet {
             case "/addReader":
                 String name = request.getParameter("name");
                 String lastname = request.getParameter("lastname");
+                String cash = request.getParameter("cash");
                 String day = request.getParameter("day");
                 String month = request.getParameter("month");
                 String year = request.getParameter("year");
@@ -195,7 +196,7 @@ public class LoginController extends HttpServlet {
                 }
                 Reader reader=null;
                 try{
-                    reader = new Reader(null,name, lastname, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+                    reader = new Reader(name, lastname, Integer.parseInt(cash), Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
                     readerFacade.create(reader);
                     ep = new EncryptPass();
                     String salts = ep.createSalts();

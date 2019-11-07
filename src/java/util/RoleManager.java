@@ -7,6 +7,7 @@ package util;
 
 import entity.Roles;
 import entity.User;
+import entity.UserRoles;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,9 @@ import session.UserRolesFacade;
 public class RoleManager {
     private RolesFacade rolesFacade;
     private UserRolesFacade userRolesFacade;
+    private Roles roleAdmin;
+    private Roles roleManager;
+    private Roles roleUser;
 
     public RoleManager() {
         Context context;
@@ -30,6 +34,9 @@ public class RoleManager {
             context = new InitialContext();
             rolesFacade = (RolesFacade) context.lookup("java:module/RolesFacade");
             userRolesFacade = (UserRolesFacade) context.lookup("java:module/UserRolesFacade");
+            roleAdmin = rolesFacade.findRoleByName("ADMIN");
+            roleManager = rolesFacade.findRoleByName("MANAGER");
+            roleUser = rolesFacade.findRoleByName("USER");
         } catch (NamingException ex) {
             Logger.getLogger(RoleManager.class.getName()).log(Level.SEVERE, "Не найден бин", ex);
         }
@@ -44,9 +51,6 @@ public class RoleManager {
 
     public String getTopRole(User user) {
         try {
-            Roles roleAdmin = rolesFacade.findRoleByName("ADMIN");
-            Roles roleManager = rolesFacade.findRoleByName("MANAGER");
-            Roles roleUser = rolesFacade.findRoleByName("USER");
             List<Roles> listRoles = userRolesFacade.findByUser(user);
             if(listRoles.contains(roleAdmin)){
                 return "ADMIN";
@@ -61,6 +65,30 @@ public class RoleManager {
         } catch (Exception e) {
            return null; 
         }
-        
     }
+    public void setRoleUser(Roles role,User user){
+       userRolesFacade.remove(user);
+       UserRoles ur = new UserRoles();
+       ur.setUser(user);
+       if(role.equals(roleAdmin)){
+           ur.setRole(roleAdmin);
+           userRolesFacade.create(ur);
+           ur.setRole(roleManager);
+           userRolesFacade.create(ur);
+           ur.setRole(roleUser);
+           userRolesFacade.create(ur);
+       }
+       if(role.equals(roleManager)){
+           ur.setRole(roleManager);
+           userRolesFacade.create(ur);
+           ur.setRole(roleUser);
+           userRolesFacade.create(ur);
+       }
+       if(role.equals(roleUser)){
+           ur.setRole(roleUser);
+           userRolesFacade.create(ur);
+       }
+    }
+        
+    
 }

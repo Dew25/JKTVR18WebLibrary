@@ -26,13 +26,13 @@
            <br>
         <a href="newReader">Регистрация</a><br>
         <a href="showListAllBooks">Все книги библиотеки</a><br>
-        <c:if test="${null != user}">
-            <a href="takeOnBook">Выдать книгу</a><br>
-        </c:if>
         <br>
-        <c:if test="${'ADMIN' eq userRole}">
+        <c:if test="${'ADMIN' eq userRole || 'MANAGER' eq userRole}">
             <a href="newBook">Новая книга</a><br>
-            <a href="returnBook">Вернуть книгу</a><br>
+           
+        </c:if>
+        <c:if test="${'ADMIN' eq userRole}">    
+            <a href="showChangeUserRole">Изменить роль пользователю</a>
         </c:if>
     </body>
 </html>

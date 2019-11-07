@@ -41,5 +41,10 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
             return null;
         }
     }
+
+    public void remove(User user) {
+        em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user")
+                .setParameter("user", user).executeUpdate();
+    }
     
 }

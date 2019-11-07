@@ -7,10 +7,13 @@ package servlets;
 
 import entity.Book;
 import entity.History;
+import entity.Roles;
 import entity.User;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
+import session.RolesFacade;
 import session.UserFacade;
 import util.RoleManager;
 
@@ -36,6 +40,9 @@ import util.RoleManager;
     "/changeActiveBook",
     "/editBook",
     "/changeBook",
+    "/showChangeUserRole",
+    "/changeRole",
+    "/changeUserRole",
     
 })
 public class AdminController extends HttpServlet {
@@ -43,6 +50,7 @@ public class AdminController extends HttpServlet {
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
     @EJB private UserFacade userFacade;
+    @EJB private RolesFacade rolesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -56,6 +64,7 @@ public class AdminController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        RoleManager rm = new RoleManager();
         HttpSession session = request.getSession(false);
         if(null == session){
             request.setAttribute("info", "У вас нет прав");
@@ -71,7 +80,7 @@ public class AdminController extends HttpServlet {
             return;
         }
         RoleManager roleManager = new RoleManager();
-        if(!roleManager.isRoleUser("ADMIN",user)){
+        if(!roleManager.isRoleUser("MANAGER",user)){
             request.setAttribute("info", "У вас нет прав");
             request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
@@ -170,6 +179,38 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("book", book);
                 request.setAttribute("info", "Книга отредактирована");
                  request.getRequestDispatcher("/WEB-INF/editBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/showChangeUserRole":
+                List<Roles> listRoles = rolesFacade.findAll();
+                List<User> listUsers = userFacade.findAll();
+                Map<User,String> mapUsers = new HashMap<>();
+                for (User u : listUsers) {
+                    if("admin".equals(u.getLogin())){
+                        continue;
+                    }
+                    mapUsers.put(u, rm.getTopRole(u));
+                }
+                request.setAttribute("listRoles", listRoles);
+                request.setAttribute("mapUsers", mapUsers);
+                request.getRequestDispatcher("/WEB-INF/showChangeUserRole.jsp")
+                        .forward(request, response);
+                break;
+            case "/changeUserRole":
+                String userId = request.getParameter("userId");
+                String roleId = request.getParameter("roleId");
+                if(null == userId || "".equals(userId)
+                        || null == roleId || "".equals(roleId)){
+                    request.setAttribute("info", "Не выбран пользователь или роль");
+                    request.getRequestDispatcher("/showChangeUserRole")
+                        .forward(request, response);
+                    break;
+                }
+                user = userFacade.find(Long.parseLong(userId));
+                Roles role = rolesFacade.find(Long.parseLong(roleId));
+                rm.setRoleUser(role, user);
+                request.setAttribute("info", "Пользователю "+user.getLogin()+" назначена роль "+ role.getRole());
+                    request.getRequestDispatcher("/showChangeUserRole")
                         .forward(request, response);
                 break;
         }

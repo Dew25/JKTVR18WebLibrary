@@ -115,7 +115,6 @@ public class LoginController extends HttpServlet {
                     user = (User) session.getAttribute("user");
                     if(user != null){
                         userRole = roleManager.getTopRole(user);
-                        request.setAttribute("info", "Пользователь " + user.getLogin() + " aвторизован");
                     }
                     request.setAttribute("userRole", userRole);
                 }
@@ -183,6 +182,7 @@ public class LoginController extends HttpServlet {
                 String password2 = request.getParameter("password2");
                 request.setAttribute("name", name);
                 request.setAttribute("lastname", lastname);
+                request.setAttribute("cash", cash);
                 request.setAttribute("day", day);
                 request.setAttribute("month", month);
                 request.setAttribute("year", year);
@@ -206,9 +206,8 @@ public class LoginController extends HttpServlet {
                         userFacade.create(user);
                         UserRoles userRoles = new UserRoles();
                         userRoles.setUser(user);
-                        Roles role = new Roles();
-                        role.setRole("USER");
-                        rolesFacade.create(role);
+                        Roles role = rolesFacade.findRoleByName("USER");
+                        
                         userRoles.setRole(role);
                         userRolesFacade.create(userRoles);
                     } catch (Exception e) {

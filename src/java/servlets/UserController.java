@@ -76,37 +76,24 @@ public class UserController extends HttpServlet {
         }
         String path = request.getServletPath();
         switch (path) {
-            case "/takeOnBook":
-                List<Book> listBooks = bookFacade.findEnabledBooks();
-                List<Reader> listReaders = readerFacade.findAll();
-                request.setAttribute("listBooks", listBooks);
-                request.setAttribute("listReaders", listReaders);
-                request.getRequestDispatcher("/WEB-INF/takeOnBook.jsp")
-                        .forward(request, response);
-                break;
+           
             case "/createHistory":
                 String bookId = request.getParameter("bookId");
-                String readerId = request.getParameter("readerId");
+                
                 try{
                     Book book = bookFacade.find(Long.parseLong(bookId));
-                    if(book.getQuantity()>0){
-                        Reader reader = readerFacade.find(Long.parseLong(readerId));
-                        book.setQuantity(book.getQuantity()-1);
-                        bookFacade.edit(book);
-                        History history = new History();
-                        history.setBook(book);
-                        history.setReader(reader);
-                        history.setTakeOnDate(new Date());
-                        historyFacade.create(history);
-                        request.setAttribute("info", "Книга выдана");
-                    }else{
-                        request.setAttribute("info", "Этой книги нет в наличии");
-                    }
-                    
+                    book.setQuantity(book.getQuantity()-1);
+                    bookFacade.edit(book);
+                    History history = new History();
+                    history.setBook(book);
+                    history.setReader(user.getReader());
+                    history.setTakeOnDate(new Date());
+                    historyFacade.create(history);
+                    request.setAttribute("info", "Книга куплена");
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Не корректные данные");
                 }
-                request.getRequestDispatcher("/takeOnBook")
+                request.getRequestDispatcher("/showListAllBooks")
                         .forward(request, response);
                 break;
             case "/showBook":
@@ -134,16 +121,11 @@ public class UserController extends HttpServlet {
                 String login = request.getParameter("login");
                 String password1 = request.getParameter("password1");
                 String password2 = request.getParameter("password2");
-                request.setAttribute("name", name);
-                request.setAttribute("lastname", lastname);
-                request.setAttribute("day", day);
-                request.setAttribute("month", month);
-                request.setAttribute("year", year);
-                request.setAttribute("login", login);
+               
                 
-                if(!password1.equals(password2)){
+                if("".equals(password1) || !password1.equals(password2)){
                     request.setAttribute("info", "Несовпадают пароли");
-                    request.getRequestDispatcher("/newReader")
+                    request.getRequestDispatcher("/showUserProfile")
                         .forward(request, response);
                     break;
                 }
@@ -159,8 +141,12 @@ public class UserController extends HttpServlet {
                     user.setLogin(login);
                     String salts = ep.createSalts();
                     String encryptPassword = ep.setEncryptPass(password1, salts);
+                    user.setPassword(encryptPassword);
+                    user.setSalts(salts);
                     readerFacade.edit(reader);
+                    user.setReader(reader);
                     userFacade.edit(user);
+                    session.setAttribute("user", user);
                     request.setAttribute("info", "Профиль читателя "+reader.getName()+" "+reader.getLastname()+" изменен");
                 }catch(NumberFormatException e){
                     readerFacade.remove(reader);

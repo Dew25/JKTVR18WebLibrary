@@ -21,6 +21,7 @@
         Доступность книги: <c:if test="${book.active == true}">доступна для читателей</c:if>
         <c:if test="${book.active == false}">неактивна</c:if>
         <br>
+        <a href="createHistory?bookId=${book.id}">Купить книгу</a>
         <c:if test="${'MANAGER' eq userRole || 'ADMIN' eq userRole}">
             <a href="editBook?bookId=${book.id}">Редактировать</a>
         </c:if>

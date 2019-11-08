@@ -156,7 +156,7 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("userRole", userRole);
                 request.setAttribute("info", "Пользователь " + user.getLogin() + " aвторизован");
                 request.setAttribute("user", user);
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher("/index").forward(request, response);
                 break;
             case "/logout":
                 session = request.getSession(false);
@@ -164,7 +164,7 @@ public class LoginController extends HttpServlet {
                     session.invalidate();
                     request.setAttribute("info", "Вы вышли из системы");
                 }
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher("/index").forward(request, response);
                 break;
             case "/newReader":
                 request.getRequestDispatcher("/WEB-INF/newReader.jsp")
@@ -222,7 +222,7 @@ public class LoginController extends HttpServlet {
                     readerFacade.remove(reader);
                     request.setAttribute("info", "Некорректные данные");
                 }
-                request.getRequestDispatcher("/index.jsp")
+                request.getRequestDispatcher("/index")
                         .forward(request, response);
                 break;
             case "/showListAllBooks":

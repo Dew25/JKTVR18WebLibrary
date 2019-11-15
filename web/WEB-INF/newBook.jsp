@@ -15,11 +15,15 @@
         <h1>Новая книга</h1>
         <a href="index">Главная страница</a>
         <p>${info}</p>
+        <a href="showUploadFile">Загрузить файл</a><br>
         <form action="addBook" method="POST">
             Название книги: <input type="text" name="title" value="${book.title}"><br>
             Автор книги: <input type="text" name="author" value="${book.author}"><br>
             Год издания книги: <input type="text" name="year" value="${book.year}"><br>
             Количество экземпляров: <input type="text" name="quantity" value="${book.quantity}"><br>
+            <select name="fileId">
+                <option value=""></option>
+            </select>
             <input type="submit" value="Добавить новую книгу">
         </form>
     </body>

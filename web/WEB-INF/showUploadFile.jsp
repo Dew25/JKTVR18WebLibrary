@@ -16,6 +16,7 @@
         <form action="uploadController" method="POST" enctype="multipart/form-data">
             <input type="text" name="description"><br>
             <input type="file" name="file"><br>
+            <input type="file" name="file"><br>           
             <input type="submit" value="Загрузить">
         </form>
     </body>

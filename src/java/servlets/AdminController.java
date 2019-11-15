@@ -7,6 +7,7 @@ package servlets;
 
 import entity.Book;
 import entity.History;
+import entity.Image;
 import entity.Roles;
 import entity.User;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
 import session.HistoryFacade;
+import session.ImageFacade;
 import session.ReaderFacade;
 import session.RolesFacade;
 import session.UserFacade;
@@ -43,6 +45,7 @@ import util.RoleManager;
     "/showChangeUserRole",
     "/changeRole",
     "/changeUserRole",
+    "/showUploadFile",
     
 })
 public class AdminController extends HttpServlet {
@@ -51,6 +54,7 @@ public class AdminController extends HttpServlet {
     @EJB private HistoryFacade historyFacade;
     @EJB private UserFacade userFacade;
     @EJB private RolesFacade rolesFacade;
+    @EJB private ImageFacade imageFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -90,6 +94,8 @@ public class AdminController extends HttpServlet {
 
         switch (path) {
             case "/newBook":
+                List<Image> images = imageFacade.findAll();
+                request.setAttribute("images", images);
                 request.getRequestDispatcher("/WEB-INF/newBook.jsp")
                         .forward(request, response);
                 break;
@@ -212,6 +218,9 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("info", "Пользователю "+user.getLogin()+" назначена роль "+ role.getRole());
                     request.getRequestDispatcher("/showChangeUserRole")
                         .forward(request, response);
+                break;
+            case "/showUploadFile":
+                request.getRequestDispatcher("/WEB-INF/showUploadFile.jsp").forward(request, response);
                 break;
         }
 

@@ -4,6 +4,7 @@
     Author     : Melnikov
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,7 +23,10 @@
             Год издания книги: <input type="text" name="year" value="${book.year}"><br>
             Количество экземпляров: <input type="text" name="quantity" value="${book.quantity}"><br>
             <select name="fileId">
-                <option value=""></option>
+                <option value="" hidden></option>
+                <c:forEach var="pic" items="${images}">
+                    <option value="${pic.id}">${pic.description}</option>
+                </c:forEach>
             </select>
             <input type="submit" value="Добавить новую книгу">
         </form>

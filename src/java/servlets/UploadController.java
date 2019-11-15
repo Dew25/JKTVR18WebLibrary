@@ -5,15 +5,27 @@
  */
 package servlets;
 
+import entity.Image;
 import entity.User;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import session.ImageFacade;
 import util.RoleManager;
 
 /**
@@ -21,8 +33,9 @@ import util.RoleManager;
  * @author Melnikov
  */
 @WebServlet(name = "UploadController", urlPatterns = {"/uploadController"})
+@MultipartConfig
 public class UploadController extends HttpServlet {
-
+    @EJB private ImageFacade imageFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -57,8 +70,45 @@ public class UploadController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-       String imagesFolder = "JKTVR18WebLibraryImages";
+       String imagesFolder = "D:\\JVM\\JKTVR18WebLibraryImages";
+       List<Part> fileParts = request.getParts()
+                .stream()
+                .filter( part -> "file".equals(part.getName()))
+                .collect(Collectors.toList());
        
+       for(Part filePart : fileParts){
+            String path =  imagesFolder+File.separatorChar
+                            +getFileName(filePart);
+            File uploadFile = new File(path);
+            try(InputStream fileContent = filePart.getInputStream()){
+               Files.copy(
+                       fileContent,uploadFile.toPath(), 
+                       StandardCopyOption.REPLACE_EXISTING
+               );
+               
+            }
+            String description = request.getParameter("description");
+            Image image = new Image(description,getFileName(filePart));
+            imageFacade.create(image);
+            
+        }    
+       request.getRequestDispatcher("/newBook").forward(request, response);
+       
+    }
+   
+    private String getFileName(final Part part){
+        final String partHeader = part.getHeader("content-disposition");
+        for (String content : part
+                .getHeader("content-disposition")
+                .split(";")){
+            if(content.trim().startsWith("filename")){
+                return content
+                        .substring(content.indexOf('=')+1)
+                        .trim()
+                        .replace("\"",""); 
+            }
+        }
+        return null;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

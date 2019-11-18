@@ -22,13 +22,20 @@
             Автор книги: <input type="text" name="author" value="${book.author}"><br>
             Год издания книги: <input type="text" name="year" value="${book.year}"><br>
             Количество экземпляров: <input type="text" name="quantity" value="${book.quantity}"><br>
-            <select name="fileId">
+            <select name="imageId">
                 <option value="" hidden></option>
-                <c:forEach var="pic" items="${images}">
-                    <option value="${pic.id}">${pic.description}</option>
+                <c:forEach var="image" items="${images}">
+                    <option value="${image.id}">${image.description}</option>
                 </c:forEach>
             </select>
             <input type="submit" value="Добавить новую книгу">
+            <c:forEach var="image" items="${images}">
+                <p>
+                    <img src="insertFile/${image.path}">
+                    <br>
+                    ${image.description}
+                </p>
+            </c:forEach>
         </form>
     </body>
 </html>

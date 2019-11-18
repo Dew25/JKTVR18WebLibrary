@@ -6,6 +6,7 @@
 package servlets;
 
 import entity.Book;
+import entity.BookImage;
 import entity.History;
 import entity.Image;
 import entity.Roles;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
+import session.BookImageFacade;
 import session.HistoryFacade;
 import session.ImageFacade;
 import session.ReaderFacade;
@@ -55,6 +57,7 @@ public class AdminController extends HttpServlet {
     @EJB private UserFacade userFacade;
     @EJB private RolesFacade rolesFacade;
     @EJB private ImageFacade imageFacade;
+    @EJB private BookImageFacade bookImageFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -104,12 +107,26 @@ public class AdminController extends HttpServlet {
                 String author = request.getParameter("author");
                 String year = request.getParameter("year");
                 String quantity = request.getParameter("quantity");
+                String imageId = request.getParameter("imageId");
+                //Проверка на null и пустую строку.
+                if(null == title || "".equals(title)
+                      ||  null == author || "".equals(author)
+                        || null == year || "".equals(year)
+                        || null == imageId || "".equals(imageId)){
+                  request.setAttribute("info", "Запомните и выберите все поля");
+                  request.getRequestDispatcher("/newBook")
+                          .forward(request, response);
+                }
+                Image image = imageFacade.find(Long.parseLong(imageId));
+                BookImage bookImage = new BookImage();
                 try{
                     Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(quantity));
                     bookFacade.create(book);
+                    bookImage.setBook(book);
+                    bookImage.setImage(image);
+                    bookImageFacade.create(bookImage);
                     request.setAttribute("book", book);
                     request.setAttribute("info", "Книга "+book.getTitle()+" добавлена!");
-                    
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Некорректные данные");
                 }

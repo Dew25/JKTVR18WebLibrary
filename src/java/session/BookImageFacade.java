@@ -5,7 +5,9 @@
  */
 package session;
 
+import entity.Book;
 import entity.BookImage;
+import entity.Image;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,16 @@ public class BookImageFacade extends AbstractFacade<BookImage> {
 
     public BookImageFacade() {
         super(BookImage.class);
+    }
+
+    public Image findByBook(Book book) {
+        try {
+            return (Image) em.createQuery("SELECT bi.image FROM BookImage bi WHERE bi.book = :book")
+                    .setParameter("book", book)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

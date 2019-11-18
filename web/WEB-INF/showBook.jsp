@@ -15,6 +15,8 @@
     <body>
         <h1>${book.title}</h1>
         <a href="index">Главная страница</a><br>
+        <img src="insertFile/${image.path}"><br>
+        <p>${image.description}</p>
         Автор: ${book.author}<br>
         Год издания: ${book.year}<br>
         Количество экземпляров: ${book.quantity}<br>

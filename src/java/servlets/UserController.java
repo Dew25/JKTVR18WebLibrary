@@ -7,6 +7,7 @@ package servlets;
 
 import entity.Book;
 import entity.History;
+import entity.Image;
 import entity.Reader;
 import entity.Roles;
 import entity.User;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
+import session.BookImageFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
@@ -45,6 +47,7 @@ public class UserController extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
+    @EJB private BookImageFacade bookImageFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -100,6 +103,11 @@ public class UserController extends HttpServlet {
                 bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
                 request.setAttribute("book", book);
+                Image image = bookImageFacade.findByBook(book);
+                if(image == null){
+                    request.setAttribute("info", "Не найдена обложка книги");
+                }
+                request.setAttribute("image", image);
                 roleManager = new RoleManager();
                 String userRole = roleManager.getTopRole(user);
                 request.setAttribute("userRole", userRole);

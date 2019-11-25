@@ -16,7 +16,8 @@
         <h1>Новая книга</h1>
         <a href="index">Главная страница</a>
         <p>${info}</p>
-        <a href="showUploadFile">Загрузить файл</a><br>
+        <a href="showUploadCover">Загрузить обложку</a><br>
+        <a href="showUploadFile">Загрузить текст книги</a><br>
         <form action="addBook" method="POST">
             Название книги: <input type="text" name="title" value="${book.title}"><br>
             Автор книги: <input type="text" name="author" value="${book.author}"><br>
@@ -26,6 +27,12 @@
                 <option value="" hidden></option>
                 <c:forEach var="image" items="${images}">
                     <option value="${image.id}">${image.description}</option>
+                </c:forEach>
+            </select>
+            <select name="textId">
+                <option value="" hidden></option>
+                <c:forEach var="text" items="${texts}">
+                    <option value="${text.id}">${text.description}</option>
                 </c:forEach>
             </select>
             <input type="submit" value="Добавить новую книгу">

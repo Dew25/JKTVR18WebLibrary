@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import session.ImageFacade;
+import util.FileLoader;
 import util.PropertiesLoader;
 import util.RoleManager;
 
@@ -31,7 +32,10 @@ import util.RoleManager;
  *
  * @author Melnikov
  */
-@WebServlet(name = "UploadController", urlPatterns = {"/uploadController"})
+@WebServlet(name = "UploadController", urlPatterns = {
+    "/uploadCover",
+    "/uploadFile",
+})
 @MultipartConfig
 public class UploadController extends HttpServlet {
     @EJB private ImageFacade imageFacade;
@@ -70,52 +74,46 @@ public class UploadController extends HttpServlet {
             return;
         }
        String description = request.getParameter("description");
-       if(null == description || "".equals(description)){
-            request.setAttribute("info", "Заполните поле с описанием изображения");
-            request.getRequestDispatcher("/showUploadFile")
-                    .forward(request, response);
-       }
-       String imagesFolder = PropertiesLoader.getFolderPath("path");
-       new File(imagesFolder).mkdirs();
-       List<Part> fileParts = request.getParts()
-                .stream()
-                .filter( part -> "file".equals(part.getName()))
-                .collect(Collectors.toList());
-       
-       for(Part filePart : fileParts){
-            String path =  imagesFolder+File.separatorChar
-                            +getFileName(filePart);
-            File uploadFile = new File(path);
-            try(InputStream fileContent = filePart.getInputStream()){
-               Files.copy(
-                       fileContent,uploadFile.toPath(), 
-                       StandardCopyOption.REPLACE_EXISTING
-               );
-               
-            }
-            
-            Image image = new Image(description,getFileName(filePart));
-            imageFacade.create(image);
-            
-        }    
-       request.getRequestDispatcher("/newBook").forward(request, response);
-       
+       FileLoader fileLoader = new FileLoader();
+       String pattern = request.getServletPath();
+        switch (pattern) {
+            case "/uploadCover":
+                if(null == description || "".equals(description)){
+                    request.setAttribute("info", "Заполните поле с описанием изображения");
+                    request.getRequestDispatcher("/showUploadCover")
+                            .forward(request, response);
+                    break;
+                }
+                List<Part> fileParts = request.getParts()
+                         .stream()
+                         .filter( part -> "file".equals(part.getName()))
+                         .collect(Collectors.toList());
+                
+                String fileName = fileLoader.uploadFile("cover", fileParts);
+                     Image image = new Image(description,fileName);
+                     imageFacade.create(image);
+                break;
+            case "/uploadFile":
+                if(null == description || "".equals(description)){
+                    request.setAttribute("info", "Заполните поле с описанием изображения");
+                    request.getRequestDispatcher("/showUploadFile")
+                            .forward(request, response);
+                    break;
+                }
+                fileParts = request.getParts()
+                         .stream()
+                         .filter( part -> "file".equals(part.getName()))
+                         .collect(Collectors.toList());
+                
+                fileName = fileLoader.uploadFile("file", fileParts);
+                     image = new Image(description,fileName);
+                     imageFacade.create(image);
+                break;
+        }
+        request.getRequestDispatcher("/newBook").forward(request, response);
     }
    
-    private String getFileName(final Part part){
-        final String partHeader = part.getHeader("content-disposition");
-        for (String content : part
-                .getHeader("content-disposition")
-                .split(";")){
-            if(content.trim().startsWith("filename")){
-                return content
-                        .substring(content.indexOf('=')+1)
-                        .trim()
-                        .replace("\"",""); 
-            }
-        }
-        return null;
-    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -5,19 +5,17 @@
  */
 package session;
 
-import entity.History;
-import java.util.List;
+import entity.Text;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
  * @author Melnikov
  */
 @Stateless
-public class HistoryFacade extends AbstractFacade<History> {
+public class TextFacade extends AbstractFacade<Text> {
 
     @PersistenceContext(unitName = "JKTVR18WebLibraryPU")
     private EntityManager em;
@@ -27,20 +25,8 @@ public class HistoryFacade extends AbstractFacade<History> {
         return em;
     }
 
-    public HistoryFacade() {
-        super(History.class);
-    }
-
-        
-    public Object getProfit(){
-        try {
-            Query query = em.createQuery("SELECT SUM(h.book.price) FROM History h");
-               Object profit = query.getSingleResult();
-            return profit; 
-        } catch (Exception e){
-            return null;
-        }
-        
+    public TextFacade() {
+        super(Text.class);
     }
     
 }

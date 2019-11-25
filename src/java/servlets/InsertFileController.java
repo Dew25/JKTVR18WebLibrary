@@ -54,13 +54,14 @@ public class InsertFileController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-        String imagePath = request.getPathInfo();
-        if(null == imagePath){
+        String filePath = request.getPathInfo();
+        if(null == filePath){
             response.sendError((HttpServletResponse.SC_NOT_FOUND));
             return;
         }
-        String imagesFolder = PropertiesLoader.getFolderPath("path");
-        File file = new File(imagesFolder,URLDecoder.decode(imagePath,"UTF-8"));
+        String key = request.getParameter("key");
+        String filesFolder = PropertiesLoader.getFolderPath(key);
+        File file = new File(filesFolder,URLDecoder.decode(filePath,"UTF-8"));
         if(!file.exists()){
             response.sendError((HttpServletResponse.SC_NOT_FOUND));
             return;

@@ -7,9 +7,11 @@ package servlets;
 
 import entity.Book;
 import entity.BookImage;
+import entity.BookText;
 import entity.History;
 import entity.Image;
 import entity.Roles;
+import entity.Text;
 import entity.User;
 import java.io.IOException;
 import java.util.Date;
@@ -25,10 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
 import session.BookImageFacade;
+import session.BookTextFacade;
 import session.HistoryFacade;
 import session.ImageFacade;
 import session.ReaderFacade;
 import session.RolesFacade;
+import session.TextFacade;
 import session.UserFacade;
 import util.RoleManager;
 
@@ -46,6 +50,7 @@ import util.RoleManager;
     "/showChangeUserRole",
     "/changeRole",
     "/changeUserRole",
+    "/showUploadCover",
     "/showUploadFile",
     "/showProfit",
     
@@ -59,6 +64,8 @@ public class AdminController extends HttpServlet {
     @EJB private RolesFacade rolesFacade;
     @EJB private ImageFacade imageFacade;
     @EJB private BookImageFacade bookImageFacade;
+    @EJB private TextFacade textFacade;
+    @EJB private BookTextFacade bookTextFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -100,6 +107,8 @@ public class AdminController extends HttpServlet {
             case "/newBook":
                 List<Image> images = imageFacade.findAll();
                 request.setAttribute("images", images);
+                List<Text> texts = textFacade.findAll();
+                request.setAttribute("texts", texts);
                 request.getRequestDispatcher("/WEB-INF/newBook.jsp")
                         .forward(request, response);
                 break;
@@ -109,25 +118,32 @@ public class AdminController extends HttpServlet {
                 String year = request.getParameter("year");
                 String price = request.getParameter("price");
                 String imageId = request.getParameter("imageId");
+                String textId = request.getParameter("textId");
                 //Проверка на null и пустую строку.
                 if(null == title || "".equals(title)
                       ||  null == author || "".equals(author)
                         || null == year || "".equals(year)
-                        || null == imageId || "".equals(imageId)){
+                        || null == imageId || "".equals(imageId)
+                        || null == textId || "".equals(textId)){
                   request.setAttribute("info", "Запомните и выберите все поля");
                   request.getRequestDispatcher("/newBook")
                           .forward(request, response);
                 }
                 Image image = imageFacade.find(Long.parseLong(imageId));
                 BookImage bookImage = new BookImage();
+                Text text = textFacade.find(Long.parseLong(textId));
+                BookText bookText = new BookText();
                 try{
                     Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(price));
                     bookFacade.create(book);
                     bookImage.setBook(book);
                     bookImage.setImage(image);
                     bookImageFacade.create(bookImage);
+                    bookText.setBook(book);
+                    bookText.setText(text);
+                    bookTextFacade.create(bookText);
                     request.setAttribute("book", book);
-                    request.setAttribute("info", "Книга "+book.getTitle()+" добавлена!");
+                    request.setAttribute("info", "Книга " + book.getTitle() + " добавлена!");
                 }catch(NumberFormatException e){
                     request.setAttribute("info", "Некорректные данные");
                 }
@@ -233,16 +249,19 @@ public class AdminController extends HttpServlet {
                     request.getRequestDispatcher("/showChangeUserRole")
                         .forward(request, response);
                 break;
+            case "/showUploadCover":
+                request.getRequestDispatcher("/WEB-INF/showUploadCover.jsp").forward(request, response);
+                break;
             case "/showUploadFile":
                 request.getRequestDispatcher("/WEB-INF/showUploadFile.jsp").forward(request, response);
                 break;
             case "/showProfit":
-                List<History> listHistory = historyFacade.findAll();
-                int profitAll = 0;
-                for (History history : listHistory) {
-                    profitAll+=history.getBook().getPrice();
-                }
-                
+//                Integer profitAll;
+//                List<History> listHistory = historyFacade.findAll();
+//                for (History history : listHistory) {
+//                    profitAll+=history.getBook().getPrice();
+//                }
+                Object profitAll =  historyFacade.getProfit();
                 request.setAttribute("profitAll", profitAll);
                 request.getRequestDispatcher("/WEB-INF/showProfit.jsp").forward(request, response);
                 break;

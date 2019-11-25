@@ -14,7 +14,7 @@
     <body>
         <h1>Загрузка обложки для книги</h1>
         <p>${info}</p>
-        <form action="uploadFile" method="POST" enctype="multipart/form-data">
+        <form action="uploadCover" method="POST" enctype="multipart/form-data">
             Описание (имя): <input type="text" name="description"><br>
             <input type="file" name="file"><br>
             <input type="submit" value="Загрузить">

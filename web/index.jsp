@@ -29,6 +29,7 @@
         <br>
         <c:if test="${'ADMIN' eq userRole || 'MANAGER' eq userRole}">
             <a href="newBook">Новая книга</a><br>
+            <a href="showProfit">Прибыль</a>
            
         </c:if>
         <c:if test="${'ADMIN' eq userRole}">    

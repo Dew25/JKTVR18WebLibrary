@@ -21,7 +21,7 @@
             <select name="bookId">
                 <option value="" hidden>Выберите книгу</option>
                 <c:forEach var="book" items="${listBooks}">
-                    <option value="${book.id}">Название: ${book.title}. Автор: ${book.author}. ${book.year}. Количество: ${book.quantity}</option>
+                    <option value="${book.id}">Название: ${book.title}. Автор: ${book.author}. ${book.year}. Цена: ${book.price}</option>
                 </c:forEach>
             </select>
             <br>

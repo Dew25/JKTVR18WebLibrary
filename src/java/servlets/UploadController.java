@@ -8,10 +8,8 @@ package servlets;
 import entity.Image;
 import entity.User;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -26,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import session.ImageFacade;
+import util.PropertiesLoader;
 import util.RoleManager;
 
 /**
@@ -70,7 +69,14 @@ public class UploadController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-       String imagesFolder = "D:\\JVM\\JKTVR18WebLibraryImages";
+       String description = request.getParameter("description");
+       if(null == description || "".equals(description)){
+            request.setAttribute("info", "Заполните поле с описанием изображения");
+            request.getRequestDispatcher("/showUploadFile")
+                    .forward(request, response);
+       }
+       String imagesFolder = PropertiesLoader.getFolderPath("path");
+       new File(imagesFolder).mkdirs();
        List<Part> fileParts = request.getParts()
                 .stream()
                 .filter( part -> "file".equals(part.getName()))
@@ -87,7 +93,7 @@ public class UploadController extends HttpServlet {
                );
                
             }
-            String description = request.getParameter("description");
+            
             Image image = new Image(description,getFileName(filePart));
             imageFacade.create(image);
             

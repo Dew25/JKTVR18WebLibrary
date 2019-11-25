@@ -16,13 +16,20 @@
         <h1>Новая книга</h1>
         <a href="index">Главная страница</a>
         <p>${info}</p>
+        <img src="insertFile/${image.path}"><br>
         <form action="changeBook" method="POST">
             <input type="hidden" name="bookId" value="${book.id}">
             Название книги: <input type="text" name="title" value="${book.title}"><br>
             Автор книги: <input type="text" name="author" value="${book.author}"><br>
             Год издания книги: <input type="text" name="year" value="${book.year}"><br>
-            Количество экземпляров: <input type="text" name="quantity" value="${book.quantity}"><br>
+            Цена книги: <input type="text" name="price" value="${book.price}"><br>
             Доступность книги: <input type="checkbox" name="active" <c:if test="${book.active == true}">checked</c:if>><br>
+            <select name="imageId">
+                <option value="" hidden></option>
+                <c:forEach var="image" items="${listImages}">
+                    <option value="${image.id}">${image.description}</option>
+                </c:forEach>
+            </select>
             <input type="submit" value="Изменить книгу">
         </form>
     </body>

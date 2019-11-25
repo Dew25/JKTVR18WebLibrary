@@ -11,7 +11,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLDecoder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import util.PropertiesLoader;
 
 /**
  *
@@ -59,7 +59,7 @@ public class InsertFileController extends HttpServlet {
             response.sendError((HttpServletResponse.SC_NOT_FOUND));
             return;
         }
-        String imagesFolder = "D:\\JVM\\JKTVR18WebLibraryImages";
+        String imagesFolder = PropertiesLoader.getFolderPath("path");
         File file = new File(imagesFolder,URLDecoder.decode(imagePath,"UTF-8"));
         if(!file.exists()){
             response.sendError((HttpServletResponse.SC_NOT_FOUND));

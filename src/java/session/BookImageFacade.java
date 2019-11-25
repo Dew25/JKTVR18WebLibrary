@@ -31,9 +31,19 @@ public class BookImageFacade extends AbstractFacade<BookImage> {
         super(BookImage.class);
     }
 
-    public Image findByBook(Book book) {
+    public Image findImageByBook(Book book) {
         try {
             return (Image) em.createQuery("SELECT bi.image FROM BookImage bi WHERE bi.book = :book")
+                    .setParameter("book", book)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public BookImage findByBook(Book book) {
+        try {
+            return (BookImage) em.createQuery("SELECT bi FROM BookImage bi WHERE bi.book = :book")
                     .setParameter("book", book)
                     .getSingleResult();
         } catch (Exception e) {

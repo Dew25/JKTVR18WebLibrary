@@ -30,10 +30,10 @@ public class HistoryFacade extends AbstractFacade<History> {
         super(History.class);
     }
 
-    public List<History> findNotReturnBook() {
-        return em.createQuery("SELECT h FROM History h WHERE h.returnDate = :returnDate")
-                .setParameter("returnDate", null)
-                .getResultList();
+        
+    public int getProfit(){
+        return (int) em.createQuery("SELECT SUM(h.book.price) FROM History h")
+                .getSingleResult();
     }
     
 }

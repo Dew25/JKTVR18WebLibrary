@@ -9,12 +9,9 @@ import entity.Book;
 import entity.History;
 import entity.Image;
 import entity.Reader;
-import entity.Roles;
 import entity.User;
-import entity.UserRoles;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -85,11 +82,19 @@ public class UserController extends HttpServlet {
                 
                 try{
                     Book book = bookFacade.find(Long.parseLong(bookId));
-                    book.setQuantity(book.getQuantity()-1);
-                    bookFacade.edit(book);
                     History history = new History();
                     history.setBook(book);
-                    history.setReader(user.getReader());
+                    //уменьшить деньги покупателя
+                    Reader reader = user.getReader();
+                    if(reader.getCash()-book.getPrice()<=0){
+                        request.setAttribute("info", "У покупателя нет денег!");
+                        request.getRequestDispatcher("/showListAllBooks")
+                        .forward(request, response);
+                        break;
+                    }
+                    reader.setCash(reader.getCash()-book.getPrice());
+                    readerFacade.edit(reader);
+                    history.setReader(reader);
                     history.setTakeOnDate(new Date());
                     historyFacade.create(history);
                     request.setAttribute("info", "Книга куплена");
@@ -103,7 +108,7 @@ public class UserController extends HttpServlet {
                 bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
                 request.setAttribute("book", book);
-                Image image = bookImageFacade.findByBook(book);
+                Image image = bookImageFacade.findImageByBook(book);
                 if(image == null){
                     request.setAttribute("info", "Не найдена обложка книги");
                 }

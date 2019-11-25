@@ -19,7 +19,7 @@
         <p>${image.description}</p>
         Автор: ${book.author}<br>
         Год издания: ${book.year}<br>
-        Количество экземпляров: ${book.quantity}<br>
+        Цена книги: ${book.price}<br>
         Доступность книги: <c:if test="${book.active == true}">доступна для читателей</c:if>
         <c:if test="${book.active == false}">неактивна</c:if>
         <br>

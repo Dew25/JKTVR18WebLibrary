@@ -40,7 +40,6 @@ import util.RoleManager;
     "/newBook",
     "/addBook",
     "/returnBook",
-    "/returnOnBook", 
     "/changeActiveBook",
     "/editBook",
     "/changeBook",
@@ -48,6 +47,8 @@ import util.RoleManager;
     "/changeRole",
     "/changeUserRole",
     "/showUploadFile",
+    "/showProfit",
+    
     
 })
 public class AdminController extends HttpServlet {
@@ -106,7 +107,7 @@ public class AdminController extends HttpServlet {
                 String title = request.getParameter("title");
                 String author = request.getParameter("author");
                 String year = request.getParameter("year");
-                String quantity = request.getParameter("quantity");
+                String price = request.getParameter("price");
                 String imageId = request.getParameter("imageId");
                 //Проверка на null и пустую строку.
                 if(null == title || "".equals(title)
@@ -120,7 +121,7 @@ public class AdminController extends HttpServlet {
                 Image image = imageFacade.find(Long.parseLong(imageId));
                 BookImage bookImage = new BookImage();
                 try{
-                    Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(quantity));
+                    Book book = new Book(title, author, Integer.parseInt(year), Integer.parseInt(price));
                     bookFacade.create(book);
                     bookImage.setBook(book);
                     bookImage.setImage(image);
@@ -133,29 +134,11 @@ public class AdminController extends HttpServlet {
                 request.getRequestDispatcher("/index")
                         .forward(request, response);
                 break;
-            case "/returnBook":
-                List<History> listHistories = historyFacade.findNotReturnBook();
-                request.setAttribute("listHistories", listHistories);
-                request.getRequestDispatcher("/WEB-INF/returnBook.jsp")
-                        .forward(request, response);
-                break;
-            case "/returnOnBook":
-                String historiId = request.getParameter("historyId");
-                History history  = historyFacade.find(Long.parseLong(historiId));
-                Book book = history.getBook();
-                book.setQuantity(book.getQuantity()+1);
-                bookFacade.edit(book);
-                history.setReturnDate(new Date());
-                historyFacade.edit(history);
-                request.setAttribute("info", "Книга возвращена!");
-                request.getRequestDispatcher("/returnBook")
-                        .forward(request, response);
-                break;
             
             case "/changeActiveBook":
                 String bookId = request.getParameter("bookId");
                 String active = request.getParameter("active");
-                book = bookFacade.find(Long.parseLong(bookId));
+                Book book = bookFacade.find(Long.parseLong(bookId));
                 if("true".equals(active)){
                     book.setActive(false);
                 }else{
@@ -175,6 +158,10 @@ public class AdminController extends HttpServlet {
             case "/editBook":
                 bookId = request.getParameter("bookId");
                 book = bookFacade.find(Long.parseLong(bookId));
+                image = bookImageFacade.findImageByBook(book);
+                request.setAttribute("image", image);
+                List<Image> listImages = imageFacade.findAll();
+                request.setAttribute("listImages", listImages);
                 request.setAttribute("book", book);
                 request.getRequestDispatcher("/WEB-INF/editBook.jsp")
                         .forward(request, response);
@@ -184,8 +171,9 @@ public class AdminController extends HttpServlet {
                 title = request.getParameter("title");
                 author = request.getParameter("author");
                 year = request.getParameter("year");
-                quantity = request.getParameter("quantity");
+                price = request.getParameter("price");
                 String activeOn = request.getParameter("active");
+                imageId = request.getParameter("imageId");
                 boolean activeBook;
                 if("on".equals(activeOn)){
                     activeBook = true;
@@ -195,13 +183,22 @@ public class AdminController extends HttpServlet {
                 book = bookFacade.find(Long.parseLong(bookId));
                 book.setActive(activeBook);
                 book.setAuthor(author);
-                book.setQuantity(Integer.parseInt(quantity));
+                book.setPrice(Integer.parseInt(price));
                 book.setTitle(title);
                 book.setYear(Integer.parseInt(year));
                 bookFacade.edit(book);
+                image = imageFacade.find(Long.parseLong(imageId));
+                bookImage = bookImageFacade.findByBook(book);
+                if(null == bookImage){
+                    bookImage = new BookImage(book, image);
+                    bookImageFacade.create(bookImage);
+                }else{
+                    bookImage.setImage(image);
+                    bookImageFacade.edit(bookImage);
+                }
                 request.setAttribute("book", book);
                 request.setAttribute("info", "Книга отредактирована");
-                 request.getRequestDispatcher("/WEB-INF/editBook.jsp")
+                 request.getRequestDispatcher("/editBook")
                         .forward(request, response);
                 break;
             case "/showChangeUserRole":
@@ -238,6 +235,16 @@ public class AdminController extends HttpServlet {
                 break;
             case "/showUploadFile":
                 request.getRequestDispatcher("/WEB-INF/showUploadFile.jsp").forward(request, response);
+                break;
+            case "/showProfit":
+                List<History> listHistory = historyFacade.findAll();
+                int profitAll = 0;
+                for (History history : listHistory) {
+                    profitAll+=history.getBook().getPrice();
+                }
+                
+                request.setAttribute("profitAll", profitAll);
+                request.getRequestDispatcher("/WEB-INF/showProfit.jsp").forward(request, response);
                 break;
         }
 

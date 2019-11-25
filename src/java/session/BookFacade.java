@@ -31,7 +31,7 @@ public class BookFacade extends AbstractFacade<Book> {
     }
 
     public List<Book> findEnabledBooks() {
-        return em.createQuery("SELECT b FROM Book b WHERE b.quantity > 0 AND b.active='true'")
+        return em.createQuery("SELECT b FROM Book b WHERE b.active='true'")
                 .getResultList();
     }
     

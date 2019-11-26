@@ -6,6 +6,7 @@
 package servlets;
 
 import entity.Image;
+import entity.Text;
 import entity.User;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import session.ImageFacade;
+import session.TextFacade;
 import util.FileLoader;
 import util.PropertiesLoader;
 import util.RoleManager;
@@ -39,6 +41,7 @@ import util.RoleManager;
 @MultipartConfig
 public class UploadController extends HttpServlet {
     @EJB private ImageFacade imageFacade;
+    @EJB private TextFacade textFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -75,6 +78,7 @@ public class UploadController extends HttpServlet {
         }
        String description = request.getParameter("description");
        FileLoader fileLoader = new FileLoader();
+       String fileName=null;
        String pattern = request.getServletPath();
         switch (pattern) {
             case "/uploadCover":
@@ -89,9 +93,9 @@ public class UploadController extends HttpServlet {
                          .filter( part -> "file".equals(part.getName()))
                          .collect(Collectors.toList());
                 
-                String fileName = fileLoader.uploadFile("cover", fileParts);
-                     Image image = new Image(description,fileName);
-                     imageFacade.create(image);
+                    fileName = fileLoader.uploadFile("cover", fileParts);
+                    Image image = new Image(description,fileName);
+                    imageFacade.create(image);
                 break;
             case "/uploadFile":
                 if(null == description || "".equals(description)){
@@ -106,8 +110,8 @@ public class UploadController extends HttpServlet {
                          .collect(Collectors.toList());
                 
                 fileName = fileLoader.uploadFile("file", fileParts);
-                     image = new Image(description,fileName);
-                     imageFacade.create(image);
+                     Text text = new Text(description,fileName);
+                     textFacade.create(text);
                 break;
         }
         request.getRequestDispatcher("/newBook").forward(request, response);

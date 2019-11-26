@@ -6,6 +6,8 @@
 package session;
 
 import entity.History;
+import entity.Reader;
+import entity.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -41,6 +43,13 @@ public class HistoryFacade extends AbstractFacade<History> {
             return null;
         }
         
+    }
+
+    public List<History> findByUser(User user) {
+        Reader reader = user.getReader();
+        return em.createQuery("SELECT h FROM History h WHERE h.reader = :reader")
+                .setParameter("reader", reader)
+                .getResultList();
     }
     
 }

@@ -38,9 +38,15 @@
             <input type="submit" value="Добавить новую книгу">
             <c:forEach var="image" items="${images}">
                 <p>
-                    <img src="insertFile/${image.path}">
+                    <img src="insertFile/${image.path}?key=cover">
                     <br>
                     ${image.description}
+                </p>
+            </c:forEach>
+                
+           <c:forEach var="text" items="${texts}">
+                <p>
+                    ${text.description}
                 </p>
             </c:forEach>
         </form>

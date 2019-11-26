@@ -12,6 +12,7 @@ import entity.Reader;
 import entity.User;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -121,6 +122,7 @@ public class UserController extends HttpServlet {
                 break;
             case "/showUserProfile":
                  request.setAttribute("user", user);
+                 List<History> listHistories = historyFacade.findByUser(user);
                  request.getRequestDispatcher("/WEB-INF/showUserProfile.jsp")
                         .forward(request, response);
                 break;

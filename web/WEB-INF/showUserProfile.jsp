@@ -4,6 +4,7 @@
     Author     : Melnikov
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -26,6 +27,12 @@
             Пароль: <input type="password" name="password1" value=""><br>
             Повторить пароль: <input type="password" name="password2" value=""><br>
             <input type="submit" value="Внести изменения">
+            <br>
+            Купленные книги:
+            <br>
+            <c:forEach var="entry" items="${boughtBooksMap}">
+                <a href="${entry.key}">${entry.value}</a><br>
+            </c:forEach>
         </form>
     </body>
 </html>

@@ -6,13 +6,18 @@
 package servlets;
 
 import entity.Book;
+import entity.BookText;
 import entity.History;
 import entity.Image;
 import entity.Reader;
+import entity.Text;
 import entity.User;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,10 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
 import session.BookImageFacade;
+import session.BookTextFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
 import util.EncryptPass;
+import util.PropertiesLoader;
 import util.RoleManager;
 
 /**
@@ -46,6 +53,7 @@ public class UserController extends HttpServlet {
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
     @EJB private BookImageFacade bookImageFacade;
+    @EJB private BookTextFacade bookTextFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -123,6 +131,31 @@ public class UserController extends HttpServlet {
             case "/showUserProfile":
                  request.setAttribute("user", user);
                  List<History> listHistories = historyFacade.findByUser(user);
+                 
+                 String fileFolder = PropertiesLoader.getFolderPath("file");
+                 /** 
+                  * алгоритм получения имени файла:
+                  * в цикле перебора listHistories получить history
+                    * из history получить book
+                    * по book найти bookText
+                    * из bookText получить text
+                    * из text получить имя файла
+                    * из fileFolder и fileName получить путь в файлу
+                    * добавить в Map путь и название книги
+                 */
+                 String fileName = "";
+                 String filePath = "";
+                 Map<String,String>boughtBooksMap = new HashMap<>();
+                 for (int i = 0; i < listHistories.size(); i++) {
+                    History history = listHistories.get(i);
+                    book = history.getBook();
+                    BookText bookText = bookTextFacade.findByBook(book);
+                    Text text = bookText.getText();
+                    fileName = text.getFileName();
+                    filePath = "http://"+fileFolder+File.separatorChar+fileName;
+                    boughtBooksMap.put(filePath, book.getTitle());
+                }
+                 request.setAttribute("boughtBooksMap", boughtBooksMap);
                  request.getRequestDispatcher("/WEB-INF/showUserProfile.jsp")
                         .forward(request, response);
                 break;

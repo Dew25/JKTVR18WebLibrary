@@ -8,13 +8,11 @@ package servlets;
 import entity.Book;
 import entity.BookImage;
 import entity.BookText;
-import entity.History;
 import entity.Image;
 import entity.Roles;
 import entity.Text;
 import entity.User;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,6 +176,8 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("image", image);
                 List<Image> listImages = imageFacade.findAll();
                 request.setAttribute("listImages", listImages);
+                List<Text> listTexts = textFacade.findAll();
+                request.setAttribute("listTexts", listTexts);
                 request.setAttribute("book", book);
                 request.getRequestDispatcher("/WEB-INF/editBook.jsp")
                         .forward(request, response);
@@ -190,6 +190,7 @@ public class AdminController extends HttpServlet {
                 price = request.getParameter("price");
                 String activeOn = request.getParameter("active");
                 imageId = request.getParameter("imageId");
+                textId = request.getParameter("textId");
                 boolean activeBook;
                 if("on".equals(activeOn)){
                     activeBook = true;
@@ -212,7 +213,17 @@ public class AdminController extends HttpServlet {
                     bookImage.setImage(image);
                     bookImageFacade.edit(bookImage);
                 }
+                text = textFacade.find(Long.parseLong(textId));
+                bookText = bookTextFacade.findByBook(book);
+                if(null == bookText){
+                    bookText = new BookText(book, text);
+                    bookTextFacade.create(bookText);
+                }else{
+                    bookText.setText(text);
+                    bookTextFacade.edit(bookText);
+                }
                 request.setAttribute("book", book);
+                request.setAttribute("text", text);
                 request.setAttribute("info", "Книга отредактирована");
                  request.getRequestDispatcher("/editBook")
                         .forward(request, response);

@@ -5,6 +5,7 @@
  */
 package session;
 
+import entity.Book;
 import entity.BookText;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,6 +28,16 @@ public class BookTextFacade extends AbstractFacade<BookText> {
 
     public BookTextFacade() {
         super(BookText.class);
+    }
+
+    public BookText findByBook(Book book) {
+        try {
+            return (BookText) em.createQuery("SELECT bt FROM BookText bt WHERE bt.book = :book")
+                    .setParameter("book", book)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

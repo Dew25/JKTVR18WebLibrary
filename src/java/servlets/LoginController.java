@@ -40,7 +40,6 @@ import util.RoleManager;
     "/newReader",
     "/addReader",
     "/showListAllBooks",
-    
 })
 public class LoginController extends HttpServlet {
     @EJB private UserFacade userFacade;

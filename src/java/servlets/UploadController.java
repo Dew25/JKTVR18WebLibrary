@@ -8,15 +8,10 @@ package servlets;
 import entity.Image;
 import entity.Text;
 import entity.User;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
-import javax.imageio.ImageIO;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import org.imgscalr.Scalr;
 import session.ImageFacade;
 import session.TextFacade;
 import util.FileLoader;
@@ -79,7 +73,7 @@ public class UploadController extends HttpServlet {
         }
        String description = request.getParameter("description");
        FileLoader fileLoader = new FileLoader();
-       String fileName=null;
+       String fileName;
        String pattern = request.getServletPath();
         switch (pattern) {
             case "/uploadCover":
@@ -116,23 +110,6 @@ public class UploadController extends HttpServlet {
                 break;
         }
         request.getRequestDispatcher("/newBook").forward(request, response);
-    }
-   
-    public byte[] resize(File icon) {
-        try {
-           BufferedImage originalImage = ImageIO.read(icon);
-           originalImage = Scalr.resize(originalImage, Scalr.Method.QUALITY, Scalr.Mode.FIT_TO_WIDTH,400);
-            //To save with original ratio uncomment next line and comment the above.
-            //originalImage= Scalr.resize(originalImage, 153, 128);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, "jpg", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            return imageInByte;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

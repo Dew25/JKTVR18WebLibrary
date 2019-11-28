@@ -12,7 +12,6 @@ import entity.Image;
 import entity.Reader;
 import entity.Text;
 import entity.User;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;

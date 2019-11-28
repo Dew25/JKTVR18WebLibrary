@@ -5,7 +5,6 @@
  */
 package util;
 
-import entity.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
 import org.imgscalr.Scalr;
@@ -56,7 +54,6 @@ public class FileLoader {
                            );
                         }
                      }
-                     
                      return getFileName(filePart);
                 }
         return null;

@@ -6,7 +6,7 @@
 package session;
 
 import entity.Book;
-import java.util.List;
+import entity.BookText;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author Melnikov
  */
 @Stateless
-public class BookFacade extends AbstractFacade<Book> {
+public class BookTextFacade extends AbstractFacade<BookText> {
 
     @PersistenceContext(unitName = "JKTVR18WebLibraryPU")
     private EntityManager em;
@@ -26,19 +26,18 @@ public class BookFacade extends AbstractFacade<Book> {
         return em;
     }
 
-    public BookFacade() {
-        super(Book.class);
+    public BookTextFacade() {
+        super(BookText.class);
     }
 
-    public List<Book> findEnabledBooks() {
+    public BookText findByBook(Book book) {
         try {
-             List<Book> listBooks = em.createQuery("SELECT b FROM Book b WHERE b.active='true'")
-                .getResultList();
-             return listBooks;
+            return (BookText) em.createQuery("SELECT bt FROM BookText bt WHERE bt.book = :book")
+                    .setParameter("book", book)
+                    .getSingleResult();
         } catch (Exception e) {
             return null;
         }
-       
     }
     
 }

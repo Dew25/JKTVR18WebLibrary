@@ -27,16 +27,18 @@ public class Book implements Serializable{
     private String title;
     private String author;
     private int year;
-    private int quantity;
+    private int price;
+    private boolean active;
 
     public Book() {
     }
 
-    public Book(String title, String author, int year, int quantity) {
+    public Book(String title, String author, int year, int price) {
         this.title = title;
         this.author = author;
         this.year = year;
-        this.quantity = quantity;
+        this.price = price;
+        this.active = true;
     }
 
     
@@ -66,17 +68,6 @@ public class Book implements Serializable{
         return title;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" 
-                + "id=" + id 
-                + ", title=" + title 
-                + ", author=" + author 
-                + ", year=" + year 
-                + ", quantity="+ quantity
-                + '}';
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -85,12 +76,32 @@ public class Book implements Serializable{
         return year;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getPrice() {
+        return price;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" 
+                + "id=" + id 
+                + ", title=" + title 
+                + ", author=" + author 
+                + ", year=" + year 
+                + ", price=" + price 
+                + ", active=" + active 
+                + '}';
     }
     
 }

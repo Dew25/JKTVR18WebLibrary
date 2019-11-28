@@ -5,7 +5,9 @@
  */
 package session;
 
-import entity.Book;
+import entity.Roles;
+import entity.User;
+import entity.UserRoles;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,7 +18,7 @@ import javax.persistence.PersistenceContext;
  * @author Melnikov
  */
 @Stateless
-public class BookFacade extends AbstractFacade<Book> {
+public class UserRolesFacade extends AbstractFacade<UserRoles> {
 
     @PersistenceContext(unitName = "JKTVR18WebLibraryPU")
     private EntityManager em;
@@ -26,19 +28,23 @@ public class BookFacade extends AbstractFacade<Book> {
         return em;
     }
 
-    public BookFacade() {
-        super(Book.class);
+    public UserRolesFacade() {
+        super(UserRoles.class);
     }
 
-    public List<Book> findEnabledBooks() {
+    public List<Roles> findByUser(User user) {
         try {
-             List<Book> listBooks = em.createQuery("SELECT b FROM Book b WHERE b.active='true'")
-                .getResultList();
-             return listBooks;
+            return em.createQuery("SELECT ur.role FROM UserRoles ur WHERE ur.user = :user")
+                    .setParameter("user", user)
+                    .getResultList();
         } catch (Exception e) {
             return null;
         }
-       
+    }
+
+    public void remove(User user) {
+        em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user")
+                .setParameter("user", user).executeUpdate();
     }
     
 }

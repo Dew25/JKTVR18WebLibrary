@@ -47,7 +47,7 @@ public class FileLoader {
                         writeToFile(resize(tempFile),pathToUploadFile);
                         tempFile.delete();
                      }else{ //if key = file
-                         try(InputStream fileContent = filePart.getInputStream()){
+                        try(InputStream fileContent = filePart.getInputStream()){
                            Files.copy(
                                    fileContent,uploadFile.toPath(), 
                                    StandardCopyOption.REPLACE_EXISTING

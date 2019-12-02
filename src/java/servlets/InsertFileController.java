@@ -41,19 +41,19 @@ public class InsertFileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
-        if(null == session){
-            request.setAttribute("info", "Войдите!");
-            request.getRequestDispatcher("/showLogin")
-                    .forward(request, response);
-            return;
-        }
-        User user = (User) session.getAttribute("user");
-        if(null == user){
-            request.setAttribute("info", "Войдите!");
-            request.getRequestDispatcher("/showLogin")
-                    .forward(request, response);
-            return;
-        }
+//        if(null == session){
+//            request.setAttribute("info", "Войдите!");
+//            request.getRequestDispatcher("/showLogin")
+//                    .forward(request, response);
+//            return;
+//        }
+//        User user = (User) session.getAttribute("user");
+//        if(null == user){
+//            request.setAttribute("info", "Войдите!");
+//            request.getRequestDispatcher("/showLogin")
+//                    .forward(request, response);
+//            return;
+//        }
         String filePath = request.getPathInfo();
         if(null == filePath){
             response.sendError((HttpServletResponse.SC_NOT_FOUND));

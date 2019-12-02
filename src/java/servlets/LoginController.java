@@ -6,13 +6,17 @@
 package servlets;
 
 import entity.Book;
+import entity.BookImage;
+import entity.Image;
 import entity.Reader;
 import entity.Roles;
 import entity.User;
 import entity.UserRoles;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BookFacade;
+import session.BookImageFacade;
+import session.ImageFacade;
 import session.ReaderFacade;
 import session.RolesFacade;
 import session.UserFacade;
@@ -47,6 +53,8 @@ public class LoginController extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private RolesFacade rolesFacade;
     @EJB private UserRolesFacade userRolesFacade;
+    @EJB private BookImageFacade bookImageFacade;
+    @EJB private ImageFacade imageFacade;
 
     @Override
     public void init() throws ServletException {
@@ -56,7 +64,9 @@ public class LoginController extends HttpServlet {
         } catch (Exception e) {
             listUsers = new ArrayList();
         }
-        if(listUsers != null && !listUsers.isEmpty()) return;
+        if(listUsers != null && !listUsers.isEmpty()){
+          return;
+        }
         
         Reader reader = new Reader( "Ivan", "Ivanov", 300, 10, 10, 2000);
         readerFacade.create(reader);
@@ -106,6 +116,7 @@ public class LoginController extends HttpServlet {
         RoleManager roleManager = new RoleManager();
         String path = request.getServletPath();
         switch (path) {
+            
             case "/index":
                 session = request.getSession(false);
                 User user=null;
@@ -118,8 +129,16 @@ public class LoginController extends HttpServlet {
                     request.setAttribute("userRole", userRole);
                 }
                 request.setAttribute("userRole", userRole);
-                
                 request.setAttribute("user", user);
+                Map<Book, String> mapBookData = new HashMap<>();
+                List<Book> listBooks = bookFacade.findAll();
+                for (int i = 0; i < listBooks.size(); i++) {
+                  Book book = listBooks.get(i);
+                  BookImage bookImage = bookImageFacade.findByBook(book);
+                  Image image = bookImage.getImage();
+                  mapBookData.put(book, image.getPath());
+                }
+                request.setAttribute("mapBookData", mapBookData);
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
             case "/showLogin":

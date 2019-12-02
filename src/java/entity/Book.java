@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,5 +104,50 @@ public class Book implements Serializable{
                 + ", active=" + active 
                 + '}';
     }
+
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 17 * hash + Objects.hashCode(this.id);
+    hash = 17 * hash + Objects.hashCode(this.title);
+    hash = 17 * hash + Objects.hashCode(this.author);
+    hash = 17 * hash + this.year;
+    hash = 17 * hash + this.price;
+    hash = 17 * hash + (this.active ? 1 : 0);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Book other = (Book) obj;
+    if (this.year != other.year) {
+      return false;
+    }
+    if (this.price != other.price) {
+      return false;
+    }
+    if (this.active != other.active) {
+      return false;
+    }
+    if (!Objects.equals(this.title, other.title)) {
+      return false;
+    }
+    if (!Objects.equals(this.author, other.author)) {
+      return false;
+    }
+    if (!Objects.equals(this.id, other.id)) {
+      return false;
+    }
+    return true;
+  }
     
 }

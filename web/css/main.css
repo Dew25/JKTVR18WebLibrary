@@ -1,8 +1,8 @@
 #info{
+    width: 100%;
     text-align: center;
     height: 40px;
-    position: fixed;
-    
+    position: relative;
 }
 .bookDataImg{
   height: 20rem;
@@ -12,5 +12,12 @@
   text-align: center;
   height: 55px;
   color: white;
+}
+.height-row{
+  display: flex;
+  
+  flex-flow: column nowrap;
+    width: 100vw;
+    height: 100vh;
 }
 

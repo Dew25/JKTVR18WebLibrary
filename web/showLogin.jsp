@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<div class="row height-row">
         <h1>Вход в систему</h1>
         <form action="login" method="POST">
             Логин: <input type="text" name="login">
@@ -16,3 +16,4 @@
         </form>
         <p>У вас нет логина? <a href="newReader">Зарегистрируйтесь</a></p>
     
+</div>

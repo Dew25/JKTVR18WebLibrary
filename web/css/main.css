@@ -13,11 +13,20 @@
   height: 55px;
   color: white;
 }
+.card-inline{
+  height: 50vh;
+}
 .height-row{
   display: flex;
-  
+  /*flex-flow: column nowrap;*/
+  width: 100vw;
+  height: 100vh;
+}
+.loginWrap{
+  display: flex;
+  margin: 0 auto;
   flex-flow: column nowrap;
-    width: 100vw;
-    height: 100vh;
+  width: 30vw;
+  height: 100vh;
 }
 

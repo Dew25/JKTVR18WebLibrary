@@ -1,4 +1,4 @@
 function closeInfo(){
-    document.getElementById("info").style.display="none";
+    document.getElementById("info").innerHTML = "";
 }
 setTimeout(closeInfo, 5000);

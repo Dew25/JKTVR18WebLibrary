@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
           <div class="row height-row">
             <c:forEach var="entry" items="${mapBookData}">
-              <div class="card border-light m-3 col-3 card-inline">
+              <div class="card border-light m-3 card-inline">
                 <a href="showBook?bookId=${entry.key.id}">
                   <img class="bookDataImg "  src="insertFile/${entry.value}?key=cover" alt="Card image">
                 </a>

@@ -6,6 +6,7 @@
 package servlets;
 
 import entity.Book;
+import entity.BookImage;
 import entity.BookText;
 import entity.History;
 import entity.Image;
@@ -13,6 +14,7 @@ import entity.Reader;
 import entity.Text;
 import entity.User;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import myclasses.BooksData;
 import session.BookFacade;
 import session.BookImageFacade;
 import session.BookTextFacade;
@@ -76,6 +79,9 @@ public class UserController extends HttpServlet {
         }
         User user = (User) session.getAttribute("user");
         RoleManager roleManager = new RoleManager();
+        String userRole = roleManager.getTopRole(user);
+        request.setAttribute("user", user);
+        request.setAttribute("userRole", userRole);
         if(!roleManager.isRoleUser("USER",user)){
             request.setAttribute("info", "У вас нет прав");
             request.getRequestDispatcher("/index.jsp")
@@ -121,8 +127,6 @@ public class UserController extends HttpServlet {
                     request.setAttribute("info", "Не найдена обложка книги");
                 }
                 request.setAttribute("image", image);
-                roleManager = new RoleManager();
-                String userRole = roleManager.getTopRole(user);
                 request.setAttribute("userRole", userRole);
                 request.getRequestDispatcher("/WEB-INF/showBook.jsp")
                         .forward(request, response);
@@ -142,16 +146,20 @@ public class UserController extends HttpServlet {
                     * добавить в Map fileName и book.getTitle()
                  */
                 String fileName;
-                Map<String,String>boughtBooksMap = new HashMap<>();
-                for (int i = 0; i < listHistories.size(); i++) {
-                    History history = listHistories.get(i);
-                    book = history.getBook();
-                    BookText bookText = bookTextFacade.findByBook(book);
-                    Text text = bookText.getText();
-                    fileName = text.getFileName();
-                    boughtBooksMap.put(fileName, book.getTitle());
+                BooksData bd = new BooksData();
+                List<BooksData> listBooksData = new ArrayList<>();
+                Map<Book, BookImage> mapBookData = new HashMap<>();
+                List<Book> listBooks = bookFacade.findAll();
+                for (int i = 0; i < listBooks.size(); i++) {
+                  book = listBooks.get(i);
+                  bd.setBook(book);
+                  BookImage bookImage = bookImageFacade.findByBook(book);
+                  bd.setImage(bookImage.getImage());
+                  BookText bookText = bookTextFacade.findByBook(book);
+                  bd.setText(bookText.getText());
+                  listBooksData.add(bd);
                 }
-                request.setAttribute("boughtBooksMap", boughtBooksMap);
+                request.setAttribute("listBooksData", listBooksData);
                 request.getRequestDispatcher("/WEB-INF/showUserProfile.jsp")
                         .forward(request, response);
                 break;

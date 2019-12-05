@@ -46,6 +46,8 @@ import util.RoleManager;
     "/newReader",
     "/addReader",
     "/showListAllBooks",
+    "/searchBook",
+    
 })
 public class LoginController extends HttpServlet {
     @EJB private UserFacade userFacade;
@@ -249,6 +251,24 @@ public class LoginController extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/listAllBooks.jsp")
                         .forward(request, response);
                 break;    
+            case "/searchBook":
+                String bookTitle = request.getParameter("bookTitle");
+                if(bookTitle == null || "".equals(bookTitle)){
+                  request.setAttribute("info", "Задайте условие поиска");
+                  request.getRequestDispatcher("/index").forward(request, response);
+                }
+                mapBookData = new HashMap<>();
+                listBooks = bookFacade.findByTitle(bookTitle);
+                for (int i = 0; i < listBooks.size(); i++) {
+                  Book book = listBooks.get(i);
+                  BookImage bookImage = bookImageFacade.findByBook(book);
+                  Image image = bookImage.getImage();
+                  mapBookData.put(book, image.getPath());
+                }
+                request.setAttribute("mapBookData", mapBookData);
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                
+                break;
         }
     }
 

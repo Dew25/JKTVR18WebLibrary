@@ -1,25 +1,52 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+      <div class="loginWrap">
         <h1>Профиль пользователя</h1>
-        <a href="index">Главная страница</a>
-        <p>${info}</p>
         <form action="changeReader" method="POST">
-            Имя читателя: <input type="text" name="name" value="${user.reader.name}"><br>
-            Фамилия читателя: <input type="text" name="lastname" value="${user.reader.lastname}"><br>
-            День рождения: <input type="text" name="day" value="${user.reader.day}"><br>
-            Месяц рождения: <input type="text" name="month" value="${user.reader.month}"><br>
-            Год рождения: <input type="text" name="year" value="${user.reader.year}"><br>
-            Кошелек: <input type="text" name="cash" value="${user.reader.cash}"><br>
-            Логин: <input type="text" name="login" value="${user.login}"><br>
-            Пароль: <input type="password" name="password1" value=""><br>
-            Повторить пароль: <input type="password" name="password2" value=""><br>
-            <input type="submit" value="Внести изменения">
-            <br>
-            Купленные книги:
-            <br>
-            <c:forEach var="entry" items="${boughtBooksMap}">
-                <a href="insertFile/${entry.key}?key=file">${entry.value}</a><br>
-            </c:forEach>
+          <div class="form-group">
+            <label for="name">Имя читателя</label>
+            <input type="text" class="form-control"  value="${user.reader.name}" name="name" id="name" placeholder="Имя пользователя">
+          </div>
+          <div class="form-group">
+            <label for="lastname">Фамилия читателя</label>
+            <input type="text" class="form-control" name="lastname" value="${user.reader.lastname}" id="lastname" placeholder="Фамилия пользователя">
+          </div>
+          <div class="form-group">
+            <label for="year">Год рождения</label>
+            <input type="text" class="form-control" name="year" value="${user.reader.year}" id="year" placeholder="Год рождения пользователя">
+          </div>  
+          <div class="form-group">
+            <label for="cash">Кошелек</label>
+            <input type="text" class="form-control" name="cash" value="${user.reader.cash}" id="cash" placeholder="Количество денег у пользователя">
+          </div>  
+          <div class="form-group">
+            <label for="login">Логин</label>
+            <input type="text" class="form-control" id="login" name="login" aria-describedby="emailHelp" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="password1">Пароль</label>
+            <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+          </div>  
+          <div class="form-group">
+            <label for="password2">Повторить пароль</label>
+            <input type="password" class="form-control" id="password2" name="password2" placeholder="Password repeat">
+          </div>  
+          <button type="submit" class="btn btn-primary">Внести изменения</button>
         </form>
-    
+      </div>          
+      <br>
+      <p class="lead text-center mt-5">Купленные книги:</p>
+      <div class="row height-row">
+        
+        <c:forEach var="bd" items="${listBooksData}">
+          <div class="card border-light m-3 card-inline">
+            <a href="insertFile/${bd.text.fileName}?key=file">
+              <img class="bookDataImg "  src="insertFile/${bd.image.path}?key=cover" alt="Card image">
+            </a>
+              <div class="card-header">${bd.book.title}</div>
+            <div class="card-body">
+              <h4 class="card-title">${bd.book.author}. ${bd.book.year}</h4>
+            </div>
+          </div>
+        </c:forEach>
+      </div>
+               

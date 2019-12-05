@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import myclasses.BooksData;
 import session.BookFacade;
 import session.BookImageFacade;
 import session.BookTextFacade;
@@ -93,12 +94,16 @@ public class AdminController extends HttpServlet {
             return;
         }
         RoleManager roleManager = new RoleManager();
+        String userRole = roleManager.getTopRole(user);
+        request.setAttribute("user", user);
+        request.setAttribute("userRole", userRole);
         if(!roleManager.isRoleUser("MANAGER",user)){
             request.setAttribute("info", "У вас нет прав");
             request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
             return;
         }
+     
         String path = request.getServletPath();
 
         switch (path) {
@@ -171,14 +176,19 @@ public class AdminController extends HttpServlet {
                 break;
             case "/editBook":
                 bookId = request.getParameter("bookId");
+                BooksData bd = new BooksData();
                 book = bookFacade.find(Long.parseLong(bookId));
+                bd.setBook(book);
                 image = bookImageFacade.findImageByBook(book);
+                bd.setImage(image);
                 request.setAttribute("image", image);
                 List<Image> listImages = imageFacade.findAll();
                 request.setAttribute("listImages", listImages);
+                bookText = bookTextFacade.findByBook(book);
+                bd.setText(bookText.getText());
                 List<Text> listTexts = textFacade.findAll();
                 request.setAttribute("listTexts", listTexts);
-                request.setAttribute("book", book);
+                request.setAttribute("booksData", bd);
                 request.getRequestDispatcher("/WEB-INF/editBook.jsp")
                         .forward(request, response);
                 break;

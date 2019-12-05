@@ -40,5 +40,15 @@ public class BookFacade extends AbstractFacade<Book> {
         }
        
     }
+
+  public List<Book> findByTitle(String bookTitle) {
+      try {
+         return em.createQuery("SELECT b FROM Book b WHERE b.title = :bookTitle")
+                 .setParameter("bookTitle", bookTitle)
+                 .getResultList();
+    } catch (Exception e) {
+        return null;
+    }
+  }
     
 }

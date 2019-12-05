@@ -13,27 +13,31 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Новая книга</h1>
+        <h1>Редактирование книги</h1>
         <a href="index">Главная страница</a>
         <p>${info}</p>
-        <img src="insertFile/${image.path}?key=cover"><br>
+        <img src="insertFile/${booksData.image.path}?key=cover"><br>
         <form action="changeBook" method="POST">
-            <input type="hidden" name="bookId" value="${book.id}">
-            Название книги: <input type="text" name="title" value="${book.title}"><br>
-            Автор книги: <input type="text" name="author" value="${book.author}"><br>
-            Год издания книги: <input type="text" name="year" value="${book.year}"><br>
-            Цена книги: <input type="text" name="price" value="${book.price}"><br>
-            Доступность книги: <input type="checkbox" name="active" <c:if test="${book.active == true}">checked</c:if>><br>
+            <input type="hidden" name="bookId" value="${booksData.book.id}">
+            Название книги: <input type="text" name="title" value="${booksData.book.title}"><br>
+            Автор книги: <input type="text" name="author" value="${booksData.book.author}"><br>
+            Год издания книги: <input type="text" name="year" value="${booksData.book.year}"><br>
+            Цена книги: <input type="text" name="price" value="${booksData.book.price}"><br>
+            Доступность книги: <input type="checkbox" name="active" <c:if test="${booksData.book.active == true}">checked</c:if>><br>
             <select name="imageId">
-                <option value="" hidden></option>
                 <c:forEach var="image" items="${listImages}">
-                    <option value="${image.id}">${image.description}</option>
+                    <option 
+                      value="${image.id}" 
+                      <c:if test="${booksData.image.id == image.id}">selected</c:if>      
+                    >${image.description}</option>
                 </c:forEach>
             </select>
             <select name="textId">
-                <option value="" hidden></option>
                 <c:forEach var="text" items="${listTexts}">
-                    <option value="${text.id}">${text.description}</option>
+                    <option 
+                      value="${text.id}"
+                      <c:if test="${booksData.text.id == text.id}">selected</c:if>
+                    >${text.description}</option>
                 </c:forEach>
             </select>
             <input type="submit" value="Изменить книгу">

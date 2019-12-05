@@ -10,11 +10,11 @@
         <title>Сетевая библиотека группы JKTVR18</title>
     </head>
     <body>
-      
-      <H1>СЕТЕВАЯ БИБЛИОТЕКА</H1>
+      <header class="fixed-top">
         
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a class="navbar-brand" href="index">Меню</a>
+        
+        <nav class="mt-0 navbar navbar-expand-lg navbar-dark bg-primary">
+          <a class="navbar-brand" href="index">СЕТЕВАЯ БИБЛИОТЕКА</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -40,8 +40,8 @@
               
             </ul>
             
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <form action="searchBook" class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="text" name="bookTitle" placeholder="Search">
               <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="navbar-nav">
@@ -62,7 +62,7 @@
             </ul>
           </div>
         </nav>
-        
+    </header>
         <div class="container-fluid">
           <div class="row">
             <p id="info" class="text-info">${info}</p>

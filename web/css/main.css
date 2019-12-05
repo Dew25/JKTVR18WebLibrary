@@ -3,10 +3,14 @@
     text-align: center;
     height: 40px;
     position: relative;
+    margin-top: 50px; 
+}
+.title-bg{
+  background-color: #2B3E50;
 }
 .bookDataImg{
-  height: 20rem;
-  width: 15rem;
+  height: 170px;
+  width: 140px;
 }
 .footer{
   text-align: center;
@@ -14,13 +18,14 @@
   color: white;
 }
 .card-inline{
-  height: 50vh;
+  width: 200px ;
+  height: auto;
 }
 .height-row{
-  display: flex;
-  /*flex-flow: column nowrap;*/
+/*  display: flex;
+  flex-flow: column nowrap;
   width: 100vw;
-  height: 100vh;
+  height: 100vh;*/
 }
 .loginWrap{
   display: flex;

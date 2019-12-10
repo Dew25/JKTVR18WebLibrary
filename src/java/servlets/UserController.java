@@ -133,9 +133,9 @@ public class UserController extends HttpServlet {
                 break;
             case "/showUserProfile":
                 request.setAttribute("user", user);
-                List<History> listHistories = historyFacade.findByUser(user);
+               // List<History> listHistories = historyFacade.findByUser(user);
                  
-                String fileFolder = PropertiesLoader.getFolderPath("file");
+               // String fileFolder = PropertiesLoader.getFolderPath("file");
                  /* 
                   * алгоритм получения данных для заполнения Map:
                   * в цикле перебора listHistories получить history
@@ -146,12 +146,11 @@ public class UserController extends HttpServlet {
                     * добавить в Map fileName и book.getTitle()
                  */
                 String fileName;
-                BooksData bd = new BooksData();
                 List<BooksData> listBooksData = new ArrayList<>();
-                Map<Book, BookImage> mapBookData = new HashMap<>();
-                List<Book> listBooks = bookFacade.findAll();
-                for (int i = 0; i < listBooks.size(); i++) {
-                  book = listBooks.get(i);
+                List<History> histories = historyFacade.findByUser(user);
+                for (int i = 0; i < histories.size(); i++) {
+                  book = histories.get(i).getBook();
+                  BooksData bd = new BooksData();
                   bd.setBook(book);
                   BookImage bookImage = bookImageFacade.findByBook(book);
                   bd.setImage(bookImage.getImage());

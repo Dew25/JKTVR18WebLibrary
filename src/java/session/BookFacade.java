@@ -41,10 +41,10 @@ public class BookFacade extends AbstractFacade<Book> {
        
     }
 
-  public List<Book> findByTitle(String bookTitle) {
+  public List<Book> search(String search) {
       try {
-         return em.createQuery("SELECT b FROM Book b WHERE b.title = :bookTitle")
-                 .setParameter("bookTitle", bookTitle)
+         return em.createQuery("SELECT b FROM Book b WHERE b.year LIKE :search OR b.title LIKE :search OR b.author LIKE :search")
+                 .setParameter("search", "%"+search+"%")
                  .getResultList();
     } catch (Exception e) {
         return null;

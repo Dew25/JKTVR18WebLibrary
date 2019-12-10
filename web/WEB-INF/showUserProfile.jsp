@@ -1,6 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-      <div class="loginWrap">
-        <h1>Профиль пользователя</h1>
+
+      <div class="row profileWrap">
+          <h1 text-center>Профиль пользователя</h1>
+      </div>
+      <div class="row profileWrap">
         <form action="changeReader" method="POST">
           <div class="form-group">
             <label for="name">Имя читателя</label>
@@ -32,21 +35,19 @@
           </div>  
           <button type="submit" class="btn btn-primary">Внести изменения</button>
         </form>
-      </div>          
-      <br>
-      <p class="lead text-center mt-5">Купленные книги:</p>
-      <div class="row height-row">
-        
-        <c:forEach var="bd" items="${listBooksData}">
-          <div class="card border-light m-3 card-inline">
-            <a href="insertFile/${bd.text.fileName}?key=file">
-              <img class="bookDataImg "  src="insertFile/${bd.image.path}?key=cover" alt="Card image">
-            </a>
-              <div class="card-header">${bd.book.title}</div>
-            <div class="card-body">
-              <h4 class="card-title">${bd.book.author}. ${bd.book.year}</h4>
-            </div>
-          </div>
-        </c:forEach>
-      </div>
-               
+      </div> 
+        <div class="lead text-center mt-5 profileWrap">
+            <p>Купленные книги:</p>
+            <c:forEach var="bd" items="${listBooksData}">
+              <div class="card border-light m-3 card-inline">
+                <a href="insertFile/${bd.text.fileName}?key=file">
+                  <img class="bookDataImg "  src="insertFile/${bd.image.path}?key=cover" alt="Card image">
+                </a>
+                  <div class="card-header">${bd.book.title}</div>
+                <div class="card-body">
+                  <h4 class="card-title">${bd.book.author}. ${bd.book.year}</h4>
+                </div>
+              </div>
+            </c:forEach>
+        </div>
+                   

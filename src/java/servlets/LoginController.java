@@ -252,22 +252,25 @@ public class LoginController extends HttpServlet {
                         .forward(request, response);
                 break;    
             case "/searchBook":
-                String bookTitle = request.getParameter("bookTitle");
-                if(bookTitle == null || "".equals(bookTitle)){
+                String search = request.getParameter("search");
+                if(search == null || "".equals(search)){
                   request.setAttribute("info", "Задайте условие поиска");
                   request.getRequestDispatcher("/index").forward(request, response);
                 }
                 mapBookData = new HashMap<>();
-                listBooks = bookFacade.findByTitle(bookTitle);
-                for (int i = 0; i < listBooks.size(); i++) {
-                  Book book = listBooks.get(i);
-                  BookImage bookImage = bookImageFacade.findByBook(book);
-                  Image image = bookImage.getImage();
-                  mapBookData.put(book, image.getPath());
+                listBooks = bookFacade.search(search); 
+                if(listBooks == null || listBooks.isEmpty()){
+                    request.setAttribute("info", "По вашему запросу ничего не найдено");
+                }else{
+                    for (int i = 0; i < listBooks.size(); i++) {
+                      Book book = listBooks.get(i);
+                      BookImage bookImage = bookImageFacade.findByBook(book);
+                      Image image = bookImage.getImage();
+                      mapBookData.put(book, image.getPath());
+                    }
                 }
                 request.setAttribute("mapBookData", mapBookData);
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
-                
                 break;
         }
     }

@@ -1,40 +1,48 @@
+"use strict"
 function closeInfo(){
     document.getElementById("info").innerHTML = "";
 }
 setTimeout(closeInfo, 5000);
 
-// Данные для передачи на сервер допустим id товаров и его количество
-//let id_product = 321;
-//let qty_product = 2;
-// 
-// Создаём объект класса XMLHttpRequest
-const request = new XMLHttpRequest();
- 
-/*  Составляем строку запроса и кладем данные, строка состоит из: 
-пути до файла обработчика ? имя в GET запросе где будет лежать значение запроса id_product и 
-через & мы передаем количество qty_product. */ 
-const url = "searchAjax?id_product=" + id_product + "&qty_product=" + qty_product;
+function status(response) {  
+  if (response.status >= 200 && response.status < 300) {  
+    return Promise.resolve(response)  
+  } else {  
+    return Promise.reject(new Error(response.statusText))  
+  }  
+}
 
-/* Здесь мы указываем параметры соединения с сервером, т.е. мы указываем метод соединения GET, 
-а после запятой мы указываем путь к файлу на сервере который будет обрабатывать наш запрос. */ 
-request.open('GET', url);
-
-// Указываем заголовки для сервера, говорим что тип данных, - контент который мы хотим получить должен быть не закодирован. 
-request.setRequestHeader('Content-Type', 'application/x-www-form-url');
- 
-// Здесь мы получаем ответ от сервера на запрос, лучше сказать ждем ответ от сервера 
-request.addEventListener("readystatechange", () => {
-{
- /*   request.readyState - возвращает текущее состояние объекта XHR(XMLHttpRequest) объекта, 
- бывает 4 состояния 4-е состояние запроса - операция полностью завершена, пришел ответ от сервера, 
- вот то что нам нужно request.status это статус ответа, 
- нам нужен код 200 это нормальный ответ сервера, 401 файл не найден, 500 сервер дал ошибку и прочее...   */
-	if (request.readyState === 4 && request.status === 200) {
-	
-      // выводим в консоль то что ответил сервер
-	  console.log( request.responseText );
-    }
-});
- 
-// Выполняем запрос 
-request.send();
+function json(response) {  
+  return response.json()  
+}
+function searchAjax(){
+  let url = "searchAjax?search="+document.getElementById("search").value;
+  fetch(url)
+          .then(status)  
+          .then(json)  
+          .then(function(data) {  
+            printBooks(data);
+            console.log('Request succeeded with JSON response', data);  
+          }).catch(function(error) {  
+            console.log('Request failed', error);  
+          });
+}
+document.getElementById("search").addEventListener("change",searchAjax);
+function printBooks(data){
+  let str='';
+  for(let i in data){
+    str +=`
+      <div class="card border-light m-3 card-inline">
+        <a href="showBook?bookId=${data[i].id}">
+          <img class="bookDataImg "  src="#" alt="Card image">
+        </a>
+          <div class="card-header">${data[i].title}</div>
+        <div class="card-body">
+          <h4 class="card-title">${data[i].author}. ${data[i].year}</h4>
+          <p class="card-text">Цена: ${data[i].price}</p>
+        </div>
+      </div>
+    `
+  }
+  document.getElementById('content').innerHTML = str;
+}

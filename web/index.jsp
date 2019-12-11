@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
-          <div class="row height-row">
+          <div id="content" class="row height-row">
             <c:forEach var="entry" items="${mapBookData}">
               <div class="card border-light m-3 card-inline">
                 <a href="showBook?bookId=${entry.key.id}">

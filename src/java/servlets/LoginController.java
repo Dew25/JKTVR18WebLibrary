@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.google.gson.Gson;
 import entity.Book;
 import entity.BookImage;
 import entity.Image;
@@ -13,6 +14,7 @@ import entity.Roles;
 import entity.User;
 import entity.UserRoles;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +49,7 @@ import util.RoleManager;
     "/addReader",
     "/showListAllBooks",
     "/searchBook",
+    "/searchAjax",
     
 })
 public class LoginController extends HttpServlet {
@@ -271,6 +274,15 @@ public class LoginController extends HttpServlet {
                 }
                 request.setAttribute("mapBookData", mapBookData);
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
+                break;
+            case "/searchAjax":
+                String searchAjax = request.getParameter("search");
+                List<Book> books = bookFacade.search(searchAjax);
+                Gson gson = new Gson();
+                String json = gson.toJson(books);  
+                try (PrintWriter out = response.getWriter()) {
+                  out.println(json);
+                }
                 break;
         }
     }

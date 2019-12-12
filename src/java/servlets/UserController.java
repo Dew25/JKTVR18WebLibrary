@@ -8,6 +8,7 @@ package servlets;
 import entity.Book;
 import entity.BookImage;
 import entity.BookText;
+import entity.Comment;
 import entity.History;
 import entity.Image;
 import entity.Reader;
@@ -30,6 +31,7 @@ import myclasses.BooksData;
 import session.BookFacade;
 import session.BookImageFacade;
 import session.BookTextFacade;
+import session.CommentFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
@@ -56,6 +58,7 @@ public class UserController extends HttpServlet {
     @EJB private HistoryFacade historyFacade;
     @EJB private BookImageFacade bookImageFacade;
     @EJB private BookTextFacade bookTextFacade;
+    @EJB private CommentFacade commentFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -121,6 +124,8 @@ public class UserController extends HttpServlet {
             case "/showBook":
                 bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
+                List<Comment>comments = commentFacade.findByBook(book);
+                request.setAttribute("comments", comments);
                 request.setAttribute("book", book);
                 Image image = bookImageFacade.findImageByBook(book);
                 if(image == null){

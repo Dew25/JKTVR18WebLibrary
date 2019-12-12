@@ -8,6 +8,7 @@ package servlets;
 import com.google.gson.Gson;
 import entity.Book;
 import entity.BookImage;
+import entity.BookText;
 import entity.Image;
 import entity.Reader;
 import entity.Roles;
@@ -26,8 +27,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import myclasses.BooksData;
 import session.BookFacade;
 import session.BookImageFacade;
+import session.BookTextFacade;
 import session.ImageFacade;
 import session.ReaderFacade;
 import session.RolesFacade;
@@ -60,6 +63,7 @@ public class LoginController extends HttpServlet {
     @EJB private UserRolesFacade userRolesFacade;
     @EJB private BookImageFacade bookImageFacade;
     @EJB private ImageFacade imageFacade;
+    @EJB private BookTextFacade bookTextFacade;
 
     @Override
     public void init() throws ServletException {
@@ -277,9 +281,20 @@ public class LoginController extends HttpServlet {
                 break;
             case "/searchAjax":
                 String searchAjax = request.getParameter("search");
+                List<BooksData> listBooksData = new ArrayList<>();
                 List<Book> books = bookFacade.search(searchAjax);
+                for (int i = 0; i < books.size(); i++) {
+                  Book book = books.get(i);
+                  BooksData bd = new BooksData();
+                  bd.setBook(book);
+                  BookImage bookImage = bookImageFacade.findByBook(book);
+                  bd.setImage(bookImage.getImage());
+                  BookText bookText = bookTextFacade.findByBook(book);
+                  bd.setText(bookText.getText());
+                  listBooksData.add(bd);
+                }
                 Gson gson = new Gson();
-                String json = gson.toJson(books);  
+                String json = gson.toJson(listBooksData);  
                 try (PrintWriter out = response.getWriter()) {
                   out.println(json);
                 }

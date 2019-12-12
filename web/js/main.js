@@ -27,19 +27,19 @@ function searchAjax(){
             console.log('Request failed', error);  
           });
 }
-document.getElementById("search").addEventListener("change",searchAjax);
+document.getElementById("search").addEventListener("keyup",searchAjax);
 function printBooks(data){
   let str='';
   for(let i in data){
     str +=`
       <div class="card border-light m-3 card-inline">
-        <a href="showBook?bookId=${data[i].id}">
-          <img class="bookDataImg "  src="#" alt="Card image">
+        <a href="showBook?bookId=${data[i].book.id}">
+          <img class="bookDataImg "  src="insertFile/${data[i].image.path}?key=cover" alt="Card image">
         </a>
-          <div class="card-header">${data[i].title}</div>
+          <div class="card-header">${data[i].book.title}</div>
         <div class="card-body">
-          <h4 class="card-title">${data[i].author}. ${data[i].year}</h4>
-          <p class="card-text">Цена: ${data[i].price}</p>
+          <h4 class="card-title">${data[i].book.author}. ${data[i].book.year}</h4>
+          <p class="card-text">Цена: ${data[i].book.price}</p>
         </div>
       </div>
     `

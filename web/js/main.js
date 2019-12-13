@@ -45,4 +45,14 @@ function printBooks(data){
     `
   }
   document.getElementById('content').innerHTML = str;
+  
+    function editComment(commentId){
+        let commentText = document.getElementById(commentId);
+        let newCommentText = document.createElement("textarea");
+        newCommentText.innerHTML=commentText.value;
+        commentText.style.display=none;
+        let parentCommentText=commentText.parentElement;
+        parentCommentText.apendChild(newCommentText);
+    }
+  
 }

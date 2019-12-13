@@ -4,7 +4,9 @@
     Author     : Melnikov
 --%>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,16 +34,26 @@
           <h2>Коментарии к книге</h2>
           <c:forEach var="comment" items="${comments}">
             <div class="card border-light m-3 col-4">
-              <div class="card-header"><span class="col-6 float-left my-2">${comment.date}</span><span class="col-6 float-right my-2">${comment.user.reader.name} ${comment.user.reader.lastname}</span></div>
+              <div class="card-header ">
+                  <span class="col-4 my-2 pull-left">
+                    <fmt:formatDate value="${comment.date}"  pattern="dd.MM.yyyy"/>
+                  </span>
+                  <span class="col-4  my-2 pull-right">
+                      ${comment.user.reader.name} ${comment.user.reader.lastname}
+                  </span>
+              </div>
                 <div class="card-body">
-                  <p class="card-text">${comment.commentText}</p>
+                  <p id="${comment.id}" class="card-text">${comment.commentText}</p>
                 </div>
             </div>
+              <c:if test="${user eq comment.user}">
+                  <button onclick="editComment(${comment.id})">Редактировать</button>
+              </c:if>
           </c:forEach>
           
           <form action="addComment" method="POST">
             <input type="hidden" name="bookId" value="${book.id}">
-            <textarea cols="30" rows="5"></textarea>
+            <textarea name="commentText" cols="30" rows="5"></textarea>
             <br>
             <button type="submit">Добавить</button>
           </form>

@@ -47,6 +47,7 @@ import util.RoleManager;
     "/takeOnBook",
     "/createHistory",
     "/showBook",
+    "/addComment",
     "/showUserProfile",
     "/changeReader",
 
@@ -124,9 +125,9 @@ public class UserController extends HttpServlet {
             case "/showBook":
                 bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
-                List<Comment>comments = commentFacade.findByBook(book);
-                request.setAttribute("comments", comments);
                 request.setAttribute("book", book);
+                List<Comment> comments = commentFacade.findByBook(book);
+                request.setAttribute("comments", comments);
                 Image image = bookImageFacade.findImageByBook(book);
                 if(image == null){
                     request.setAttribute("info", "Не найдена обложка книги");
@@ -134,6 +135,20 @@ public class UserController extends HttpServlet {
                 request.setAttribute("image", image);
                 request.setAttribute("userRole", userRole);
                 request.getRequestDispatcher("/WEB-INF/showBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/addComment":
+                bookId = request.getParameter("bookId");
+                String commentText = request.getParameter("commentText");
+                book = bookFacade.find(Long.parseLong(bookId));
+                Comment comment = new Comment();
+                comment.setBook(book);
+                comment.setUser(user);
+                comment.setCommentText(commentText);
+                comment.setDate(new Date());
+                comment.setAvalable(true);
+                commentFacade.create(comment);
+                request.getRequestDispatcher("/showBook")
                         .forward(request, response);
                 break;
             case "/showUserProfile":

@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.google.gson.Gson;
 import entity.Book;
 import entity.BookImage;
 import entity.BookText;
@@ -15,6 +16,7 @@ import entity.Reader;
 import entity.Text;
 import entity.User;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ import util.RoleManager;
     "/addComment",
     "/showUserProfile",
     "/changeReader",
+    "/changeComment",
 
 })
 public class UserController extends HttpServlet {
@@ -150,6 +153,17 @@ public class UserController extends HttpServlet {
                 commentFacade.create(comment);
                 request.getRequestDispatcher("/showBook")
                         .forward(request, response);
+                break;
+            case "/changeComment":
+                String commentId = request.getParameter("commentId");
+                commentText = request.getParameter("commentText");
+                comment = commentFacade.find(Long.parseLong(commentId));
+                comment.setCommentText(commentText);
+                commentFacade.edit(comment);
+                String json = new Gson().toJson(comment);  
+                try (PrintWriter out = response.getWriter()) {
+                  out.println(json);
+                }
                 break;
             case "/showUserProfile":
                 request.setAttribute("user", user);

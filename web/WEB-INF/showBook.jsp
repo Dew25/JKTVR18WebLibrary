@@ -1,21 +1,6 @@
-<%-- 
-    Document   : listAllBooks
-    Created on : Oct 9, 2019, 9:21:06 AM
-    Author     : Melnikov
---%>
-
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Чтение книги</title>
-    </head>
-    <body>
-      <div class="container">
         <h1>${book.title}</h1>
         <a href="index">Главная страница</a><br>
         <img src="insertFile/${image.path}?key=cover"><br>
@@ -30,7 +15,7 @@
         <c:if test="${'MANAGER' eq userRole || 'ADMIN' eq userRole}">
             <a href="editBook?bookId=${book.id}">Редактировать</a>
         </c:if>
-        <div>
+        <div class="comments">
           <h2>Коментарии к книге</h2>
           <c:forEach var="comment" items="${comments}">
             <div class="card border-light m-3 col-4">
@@ -43,12 +28,14 @@
                   </span>
               </div>
                 <div class="card-body">
-                  <p id="${comment.id}" class="card-text">${comment.commentText}</p>
+                  <p id="text_${comment.id}" class="card-text">${comment.commentText}</p>
                 </div>
-            </div>
               <c:if test="${user eq comment.user}">
-                  <button onclick="editComment(${comment.id})">Редактировать</button>
+                <input id="edit_${comment.id}" class="editComment" type="button" m-3 col-4 value="Редактировать" onclick="window.editComment(${comment.id})"/>
+                <input id="change_${comment.id}" class="changeComment" type="button" m-3 col-4 value="Изменить" onclick="window.changeComment(${comment.id})"/>
               </c:if>
+            </div>
+              
           </c:forEach>
           
           <form action="addComment" method="POST">
@@ -58,6 +45,4 @@
             <button type="submit">Добавить</button>
           </form>
         </div>
-      </div>
-    </body>
-</html>
+      

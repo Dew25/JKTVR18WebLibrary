@@ -46,13 +46,45 @@ function printBooks(data){
   }
   document.getElementById('content').innerHTML = str;
   
-    function editComment(commentId){
-        let commentText = document.getElementById(commentId);
-        let newCommentText = document.createElement("textarea");
-        newCommentText.innerHTML=commentText.value;
-        commentText.style.display=none;
-        let parentCommentText=commentText.parentElement;
-        parentCommentText.apendChild(newCommentText);
-    }
+   
   
-}
+} 
+    function editComment(commentId){
+        let commentText = document.getElementById("text_"+commentId);
+        let newCommentTextarea = document.createElement("textarea");
+        newCommentTextarea.setAttribute("id","newText_"+commentId);
+        newCommentTextarea.innerHTML=commentText.textContent;
+        commentText.style.display="none";
+        let parentCommentText=commentText.parentElement;
+        parentCommentText.appendChild(newCommentTextarea);
+        let buttonEdit = document.getElementById("edit_"+commentId);
+        buttonEdit.style.display = "none";
+        let buttonChange = document.getElementById("change_"+commentId);
+        buttonChange.style.display="block";
+        
+    }
+    function changeComment(commentId){
+        let commentAreatext = document.getElementById("newText_"+commentId);
+        let url = "changeComment?commentId="+commentId+"&commentText="+commentAreatext.textContent;
+        fetch(url)
+          .then(status)  
+          .then(json)  
+          .then(function(data) {  
+            printComment(data,commentId);
+            console.log('Request succeeded with JSON response', data);  
+          }).catch(function(error) {  
+            console.log('Request failed', error);  
+          });
+    }
+    function printComment(data,commentId){
+        let commentText = document.getElementById("text_"+commentId);
+        commentText.innerHTML=data;
+        let commentAreatext = document.getElementById("newText_"+commentId);
+        commentAreatext.style.display = "none";
+        commentText.style.distplay = "block";
+        let buttonEdit = document.getElementById("edit_"+commentId);
+        buttonEdit.style.display = "block";
+        let buttonChange = document.getElementById("change_"+commentId);
+        buttonChange.style.display="none";
+        
+    }

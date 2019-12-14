@@ -11,6 +11,7 @@
             <url-pattern>/index.jsp</url-pattern>
             <url-pattern>/showLogin.jsp</url-pattern>
             <url-pattern>/WEB-INF/showUserProfile.jsp</url-pattern>
+            <url-pattern>/WEB-INF/showBook.jsp</url-pattern>
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
         </jsp-property-group>

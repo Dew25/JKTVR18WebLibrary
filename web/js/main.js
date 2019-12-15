@@ -53,10 +53,16 @@ function printBooks(data){
         let commentText = document.getElementById("text_"+commentId);
         let newCommentTextarea = document.createElement("textarea");
         newCommentTextarea.setAttribute("id","newText_"+commentId);
+        newCommentTextarea.setAttribute("cols",70);
         newCommentTextarea.innerHTML=commentText.textContent;
         commentText.style.display="none";
         let parentCommentText=commentText.parentElement;
-        parentCommentText.appendChild(newCommentTextarea);
+        let editDate = document.getElementById('editDate_'+commentId);
+          if(editDate !== null){
+            parentCommentText.insertBefore(newCommentTextarea,editDate);
+          }else{
+            parentCommentText.appendChild(newCommentTextarea);
+          }
         let buttonEdit = document.getElementById("edit_"+commentId);
         buttonEdit.style.display = "none";
         let buttonChange = document.getElementById("change_"+commentId);
@@ -65,7 +71,7 @@ function printBooks(data){
     }
     function changeComment(commentId){
         let commentAreatext = document.getElementById("newText_"+commentId);
-        let url = "changeComment?commentId="+commentId+"&commentText="+commentAreatext.textContent;
+        let url = "changeComment?commentId="+commentId+"&commentText="+commentAreatext.value;
         fetch(url)
           .then(status)  
           .then(json)  
@@ -78,13 +84,24 @@ function printBooks(data){
     }
     function printComment(data,commentId){
         let commentText = document.getElementById("text_"+commentId);
-        commentText.innerHTML=data;
+        commentText.innerHTML=data[0];
         let commentAreatext = document.getElementById("newText_"+commentId);
-        commentAreatext.style.display = "none";
-        commentText.style.distplay = "block";
-        let buttonEdit = document.getElementById("edit_"+commentId);
-        buttonEdit.style.display = "block";
+        commentAreatext.parentNode.removeChild(commentAreatext);
+        commentText.style.display = "block";
+        if(data[1] !== ''){
+          let editDate = document.getElementById('editDate_'+commentId);
+          if(editDate !== null){
+            editDate.parentNode.removeChild(editDate);
+          }
+          editDate = document.createElement("span");
+          editDate.setAttribute("id","editDate_"+commentId);
+          commentText.parentElement.insertBefore(editDate,commentText.nextSibling);
+          editDate.innerHTML = data[1];
+          editDate.style.displey = "block";
+        }
+        
         let buttonChange = document.getElementById("change_"+commentId);
         buttonChange.style.display="none";
-        
+        let buttonEdit = document.getElementById("edit_"+commentId);
+        buttonEdit.style.display = "block";
     }

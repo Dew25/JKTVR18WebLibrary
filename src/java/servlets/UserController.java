@@ -17,6 +17,7 @@ import entity.Text;
 import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,10 +158,16 @@ public class UserController extends HttpServlet {
             case "/changeComment":
                 String commentId = request.getParameter("commentId");
                 commentText = request.getParameter("commentText");
+                
                 comment = commentFacade.find(Long.parseLong(commentId));
+                Date date=new Date();
+                comment.setDate(date);
                 comment.setCommentText(commentText);
                 commentFacade.edit(comment);
-                String json = new Gson().toJson(comment);  
+                SimpleDateFormat formatText = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                String editDate = "(Редактировано "+formatText.format(comment.getDate())+")";
+                String[] sentToClient = {comment.getCommentText(),editDate};
+                String json = new Gson().toJson(sentToClient);  
                 try (PrintWriter out = response.getWriter()) {
                   out.println(json);
                 }

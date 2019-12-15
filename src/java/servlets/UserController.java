@@ -77,6 +77,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        String json = null;
         EncryptPass ep = new EncryptPass();
         HttpSession session = request.getSession(false);
         if(null == session){
@@ -149,28 +150,23 @@ public class UserController extends HttpServlet {
                 comment.setBook(book);
                 comment.setUser(user);
                 comment.setCommentText(commentText);
-                comment.setDate(new Date());
+                comment.setCreateDate(new Date());
                 comment.setAvalable(true);
                 commentFacade.create(comment);
-                request.getRequestDispatcher("/showBook")
-                        .forward(request, response);
+                json = new Gson().toJson(comment);
                 break;
             case "/changeComment":
                 String commentId = request.getParameter("commentId");
                 commentText = request.getParameter("commentText");
-                
                 comment = commentFacade.find(Long.parseLong(commentId));
                 Date date=new Date();
-                comment.setDate(date);
+                comment.setLastEditDate(date);
                 comment.setCommentText(commentText);
                 commentFacade.edit(comment);
                 SimpleDateFormat formatText = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-                String editDate = "(Редактировано "+formatText.format(comment.getDate())+")";
+                String editDate = formatText.format(comment.getLastEditDate());
                 String[] sentToClient = {comment.getCommentText(),editDate};
-                String json = new Gson().toJson(sentToClient);  
-                try (PrintWriter out = response.getWriter()) {
-                  out.println(json);
-                }
+                json = new Gson().toJson(sentToClient);
                 break;
             case "/showUserProfile":
                 request.setAttribute("user", user);
@@ -247,6 +243,12 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("/index")
                         .forward(request, response);
                 break;    
+        }
+        if(json != null){
+          try (PrintWriter out = response.getWriter()) {
+                  out.println(json);
+          }
+          json = null;
         }
     }
 

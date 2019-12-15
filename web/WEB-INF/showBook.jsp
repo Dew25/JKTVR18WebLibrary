@@ -3,7 +3,7 @@
 
         <h1>${book.title}</h1>
         <a href="index">Главная страница</a><br>
-        <img src="insertFile/${image.path}?key=cover"><br>
+        <img class="bookDataImg" src="insertFile/${image.path}?key=cover">
         <p>${image.description}</p>
         Автор: ${book.author}<br>
         Год издания: ${book.year}<br>
@@ -30,21 +30,25 @@
                 <div class="card-body min-vh-50">
                   <p id="text_${comment.id}" class="card-text">${comment.commentText}</p>
                 </div>
-                <div class="col-2">  
-                  <c:if test="${user eq comment.user}">
-                    <input id="edit_${comment.id}" class="editComment" type="button" m-3 value="Редактировать" onclick="window.editComment(${comment.id})"/>
-                    <input id="change_${comment.id}" class="changeComment" type="button" m-3 value="Изменить" onclick="window.changeComment(${comment.id})"/>
-                  </c:if>
-                </div>
+                
             </div>
-              
+            <div class="col-2 comment-btns  pull-right">  
+                <c:if test="${user eq comment.user}">
+                  <input id="edit_${comment.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${comment.id})"/>
+                  <input id="change_${comment.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.sendCommentToServer(${comment.id})"/>
+                </c:if>
+            </div>
           </c:forEach>
+          <div id="addComment" class="card border-light m-3 col-6">
+            <div class="card-body min-vh-50">
+              <input type="hidden" id="bookId" value="${book.id}"><br>
+              <textarea class="addCommentText" commentText="commentText" cols="70"></textarea>
+            </div>
+            <div class="col-2 comment-btns  pull-right"> 
+              <input type="button" onclick="addComment()" value="Добавить">
+            </div>
+          </div>
           
-          <form action="addComment" method="POST">
-            <input type="hidden" name="bookId" value="${book.id}">
-            <textarea class="addCommentText" name="commentText" cols="70"></textarea>
-            <br>
-            <input type="submit" onclick="submit()" value="Добавить">
-          </form>
         </div>
-      
+        
+            <div class="row m-3"></div>

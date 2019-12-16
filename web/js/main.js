@@ -107,8 +107,8 @@ function printBooks(data){
     }
     
     function addComment() {
-      let bookId = document.getElementById('bookId').textContent;
-      let commentText = document.getElementById('commentText').textContext;
+      let bookId = document.getElementById('bookId').value;
+      let commentText = document.getElementById('commentText').value;
       let data={
         bookId:bookId,
         commentText: commentText
@@ -142,8 +142,7 @@ function printBooks(data){
       } 
       
       let commentHTML = 
-        `   
-              <div class="card-header ">
+        `     <div class="card-header ">
                   <span class="col-4 my-2 pull-left">
                     ${data.comment.date}
                   </span>
@@ -156,24 +155,22 @@ function printBooks(data){
               </div> 
       `;
       
-      let commentButtonElem = document.createElement("civ");
-      commentButtonElem.setAttribute("class","col-2");
-      commentButtonElem.classList.add("comment-btns");
-      commentButtonElem.classList.add("pull-right");
+      let commentButtonElem = document.createElement("div");
+      commentButtonElem.setAttribute("class","col-2 comment-btns pull-right");
+//      commentButtonElem.classList.add("comment-btns");
+//      commentButtonElem.classList.add("pull-right");
       commentButtonElem.innerHTML = commentButton;
       let addCommentElem = document.getElementById("addComment");
       let parentAddCommentElem = addCommentElem.parentElement;
-      let cart = document.createElement("div");
       
-      cart.setAttribute("class", "card");
-      cart.classList.add("border-light");
-      cart.classList.add("m-3");
-      cart.classList.add("col-6");
-      cart.innetHTML = commetnHTML
+      let cart = document.createElement("div");
+      cart.setAttribute("class", "card border-light m-3 col-6");
+//      cart.classList.add("border-light");
+//      cart.classList.add("m-3");
+//      cart.classList.add("col-6");
+      cart.innetHTML = commentHTML;
       parentAddCommentElem.insertBefore(cart,addCommentElem);
       parentAddCommentElem.insertBefore(commentButtonElem,cart.nextSubling);
       cart.style.display = "block";
       commentButtonElem.style.display = "block";
-      
-  
-}
+    }

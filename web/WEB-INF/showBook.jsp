@@ -42,10 +42,10 @@
           <div id="addComment" class="card border-light m-3 col-6">
             <div class="card-body min-vh-50">
               <input type="hidden" id="bookId" value="${book.id}"><br>
-              <textarea class="addCommentText" commentText="commentText" cols="70"></textarea>
+              <textarea class="addCommentText" id="commentText" cols="70"></textarea>
             </div>
             <div class="col-2 comment-btns  pull-right"> 
-              <input type="button" onclick="addComment()" value="Добавить">
+              <input type="button" onclick="window.addComment()" value="Добавить">
             </div>
           </div>
           

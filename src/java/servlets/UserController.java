@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,13 +144,14 @@ public class UserController extends HttpServlet {
                         .forward(request, response);
                 break;
             case "/addComment":
-                bookId = request.getParameter("bookId");
-                String commentText = request.getParameter("commentText");
-                book = bookFacade.find(Long.parseLong(bookId));
+                String data = request.getParameter("data");
+                Enumeration data1 =  request.getParameterNames();
+                List<String> dataFromJson = new Gson().fromJson(data, ArrayList.class);
+                book = bookFacade.find(Long.parseLong(dataFromJson.get(0)));
                 Comment comment = new Comment();
                 comment.setBook(book);
                 comment.setUser(user);
-                comment.setCommentText(commentText);
+                comment.setCommentText(dataFromJson.get(1));
                 comment.setCreateDate(new Date());
                 comment.setAvalable(true);
                 commentFacade.create(comment);
@@ -157,7 +159,7 @@ public class UserController extends HttpServlet {
                 break;
             case "/changeComment":
                 String commentId = request.getParameter("commentId");
-                commentText = request.getParameter("commentText");
+                String commentText = request.getParameter("commentText");
                 comment = commentFacade.find(Long.parseLong(commentId));
                 Date date=new Date();
                 comment.setLastEditDate(date);

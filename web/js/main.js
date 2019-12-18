@@ -107,14 +107,14 @@ function printBooks(data){
     }
     
     function addComment() {
-      let bookId = document.getElementById('bookId').value;
-      let commentText = document.getElementById('commentText').value;
+      let bookId = document.getElementById('bookId');
+      let commentTextarea = document.getElementById('commentTextarea');
       let data={
-        bookId:bookId,
-        commentText: commentText
+        bookId:bookId.value,
+        commentText: commentTextarea.value
       }
       let url = "addComment";
-      
+      commentTextarea.innerHTML='';
       let response = fetch(url, {
         method: 'POST',
         headers: {
@@ -131,46 +131,44 @@ function printBooks(data){
               .catch(function(error) {  
                 console.log('Request failed', error);  
               });
+              
     }
     function insertComment(data) {
       let commentButton='';
-      if(data.userLogin == data.comment.user.login){
+      
         commentButton = 
-                ` <input id="edit_${data.comment.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${data.comment.id})"/>
-                  <input id="change_${data.comment.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.changeComment(${data.comment.id})"/>
+                ` <input id="edit_${data.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${data.id})"/>
+                  <input id="change_${data.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.changeComment(${data.id})"/>
                 `
-      } 
+      
       
       let commentHTML = 
-        `     <div class="card-header ">
+        `<div class="card-header ">
                   <span class="col-4 my-2 pull-left">
-                    ${data.comment.date}
+                    ${data.createDate}
                   </span>
                   <span class="col-4  my-2 pull-right">
-                      ${data.comment.user.reader.name} ${data.comment.user.reader.lastname}
+                      ${data.user.reader.name} ${data.user.reader.lastname}
                   </span>
               </div>
               <div class="card-body min-vh-50">
-                <p id="text_${data.comment.id}" class="card-text">${data.comment.commentText}</p>
-              </div> 
-      `;
+                <p id="text_${data.id}" class="card-text">${data.commentText}</p>
+              </div>`;
       
       let commentButtonElem = document.createElement("div");
       commentButtonElem.setAttribute("class","col-2 comment-btns pull-right");
-//      commentButtonElem.classList.add("comment-btns");
-//      commentButtonElem.classList.add("pull-right");
       commentButtonElem.innerHTML = commentButton;
-      let addCommentElem = document.getElementById("addComment");
-      let parentAddCommentElem = addCommentElem.parentElement;
       
       let cart = document.createElement("div");
+      cart.setAttribute("id","cart_"+data.id);
       cart.setAttribute("class", "card border-light m-3 col-6");
-//      cart.classList.add("border-light");
-//      cart.classList.add("m-3");
-//      cart.classList.add("col-6");
-      cart.innetHTML = commentHTML;
-      parentAddCommentElem.insertBefore(cart,addCommentElem);
-      parentAddCommentElem.insertBefore(commentButtonElem,cart.nextSubling);
+      cart.innerHTML = commentHTML;
+      cart.visible = true;
+      document.getElementById("commentText").innerHTML='';
+      let commentsElem = document.getElementById("comments");
+      commentsElem.appendChild(cart);
+      commentsElem.insertBefore(commentButtonElem,cart.nextSubling);
       cart.style.display = "block";
       commentButtonElem.style.display = "block";
+      
     }

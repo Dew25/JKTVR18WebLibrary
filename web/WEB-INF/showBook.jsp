@@ -15,13 +15,13 @@
         <c:if test="${'MANAGER' eq userRole || 'ADMIN' eq userRole}">
             <a href="editBook?bookId=${book.id}">Редактировать</a>
         </c:if>
-        <div class="comments mb-15">
+        <div id="comments" class="comments mb-15">
           <h2>Коментарии к книге</h2>
           <c:forEach var="comment" items="${comments}">
-            <div class="card border-light m-3 col-6">
+            <div id="card_${comment.id}" class="card border-light m-3 col-6">
               <div class="card-header ">
                   <span class="col-4 my-2 pull-left">
-                    <fmt:formatDate value="${comment.date}"  pattern="dd.MM.yyyy"/>
+                    <fmt:formatDate value="${comment.createDate}"  pattern="dd.MM.yyyy"/>
                   </span>
                   <span class="col-4  my-2 pull-right">
                       ${comment.user.reader.name} ${comment.user.reader.lastname}
@@ -39,16 +39,16 @@
                 </c:if>
             </div>
           </c:forEach>
-          <div id="addComment" class="card border-light m-3 col-6">
-            <div class="card-body min-vh-50">
-              <input type="hidden" id="bookId" value="${book.id}"><br>
-              <textarea class="addCommentText" id="commentText" cols="70"></textarea>
-            </div>
-            <div class="col-2 comment-btns  pull-right"> 
-              <input type="button" onclick="window.addComment()" value="Добавить">
-            </div>
-          </div>
+          
           
         </div>
-        
-            <div class="row m-3"></div>
+        <div id="addComment" class="card border-light m-3 col-6">
+          <div class="card-body min-vh-50">
+            <input type="hidden" id="bookId" value="${book.id}"><br>
+            <textarea class="addCommentText" id="commentTextarea" cols="70"></textarea>
+          </div>
+          <div class="col-2 comment-btns  pull-right"> 
+            <input type="button" onclick="window.addComment()" value="Добавить">
+          </div>
+        </div>
+            

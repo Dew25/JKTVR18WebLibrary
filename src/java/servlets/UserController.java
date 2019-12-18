@@ -6,6 +6,7 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import entity.Book;
 import entity.BookImage;
 import entity.BookText;
@@ -16,6 +17,7 @@ import entity.Reader;
 import entity.Text;
 import entity.User;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -144,17 +146,17 @@ public class UserController extends HttpServlet {
                         .forward(request, response);
                 break;
             case "/addComment":
-                String data = request.getParameter("data");
-                Enumeration data1 =  request.getParameterNames();
-                List<String> dataFromJson = new Gson().fromJson(data, ArrayList.class);
-                book = bookFacade.find(Long.parseLong(dataFromJson.get(0)));
+                JsonReader data = new JsonReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+                CommentEdit commentEdit = new Gson().fromJson(data, CommentEdit.class);
+                book = bookFacade.find(Long.parseLong(commentEdit.bookId));
                 Comment comment = new Comment();
                 comment.setBook(book);
                 comment.setUser(user);
-                comment.setCommentText(dataFromJson.get(1));
+                comment.setCommentText(commentEdit.commentText);
                 comment.setCreateDate(new Date());
                 comment.setAvalable(true);
                 commentFacade.create(comment);
+                
                 json = new Gson().toJson(comment);
                 break;
             case "/changeComment":
@@ -253,7 +255,10 @@ public class UserController extends HttpServlet {
           json = null;
         }
     }
-
+    public class CommentEdit{
+      public String bookId;
+      public String commentText;
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

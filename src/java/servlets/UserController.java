@@ -186,7 +186,7 @@ public class UserController extends HttpServlet {
                     * из text получить имя файла в fileName
                     * добавить в Map fileName и book.getTitle()
                  */
-                String fileName;
+                
                 List<BooksData> listBooksData = new ArrayList<>();
                 List<History> histories = historyFacade.findByUser(user);
                 for (int i = 0; i < histories.size(); i++) {

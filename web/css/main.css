@@ -1,3 +1,7 @@
+#show-book-wrap textarea{
+    width: 100%;
+    box-sizing: border-box;
+}
 #info{
     width: 100%;
     text-align: center;
@@ -47,14 +51,10 @@
 }
 .edit-comment-btn,
 .change-comment-btn{
-  width: 13vw;
+  width: 10rem;
 }
 .change-comment-btn{
     display: none;
 }
-.comment-btns{
-  width: 100%;
-  
-  align-content: flex-end;
-}
+
 

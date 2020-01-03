@@ -176,3 +176,27 @@ function insertComment(data) {
   let commentTextarea = document.getElementById("commentTextarea");
   commentTextarea.value = '';
 }
+document.getElementById("enter").onclick=function(){
+    let login = document.getElementById("login").value;
+    let password = document.getElementById("password").value;
+    let url = "webresources/loginController/loginRest";
+    let token = localStorage.getItem("token");
+    let data = [login,password,token];
+    let response = fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(data)
+    });
+    response.then(status)  
+            .then(json)  
+            .then(function(token) {  
+              localStorage.setItem("token",token.data);
+              console.log('Request succeeded with JSON response', token);  
+            })
+            .catch(function(error) {  
+              console.log('Request failed', error);  
+            });
+    
+}

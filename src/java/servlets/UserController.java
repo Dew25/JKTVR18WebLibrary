@@ -14,7 +14,6 @@ import entity.Comment;
 import entity.History;
 import entity.Image;
 import entity.Reader;
-import entity.Text;
 import entity.User;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,10 +21,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,7 +38,6 @@ import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
 import util.EncryptPass;
-import util.PropertiesLoader;
 import util.RoleManager;
 
 /**
@@ -102,7 +97,6 @@ public class UserController extends HttpServlet {
         }
         String path = request.getServletPath();
         switch (path) {
-           
             case "/createHistory":
                 String bookId = request.getParameter("bookId");
                 
@@ -213,8 +207,6 @@ public class UserController extends HttpServlet {
                 String login = request.getParameter("login");
                 String password1 = request.getParameter("password1");
                 String password2 = request.getParameter("password2");
-               
-                
                 if("".equals(password1) || !password1.equals(password2)){
                     request.setAttribute("info", "Несовпадают пароли");
                     request.getRequestDispatcher("/showUserProfile")

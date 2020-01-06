@@ -141,7 +141,7 @@ function insertComment(data) {
 
     commentButton = 
             ` <input id="edit_${data.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${data.id})"/>
-              <input id="change_${data.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.changeComment(${data.id})"/>
+              <input id="change_${data.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.sendCommentToServer(${data.id})"/>
             `
 
 
@@ -175,4 +175,27 @@ function insertComment(data) {
   commentButtonElem.style.display = "block";
   let commentTextarea = document.getElementById("commentTextarea");
   commentTextarea.value = '';
+}
+document.getElementById("enter").onclick = funtion(){
+  let login = document.getElementById("login").value;
+  let password = document.getElementById("password").value;
+  let token='';
+  let url = 'loginRest';
+  let data = [login, password, token];
+  let response = fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(data)
+  });
+  response.then(status)  
+          .then(json)  
+          .then(function(data) {  
+            console.log('Request succeeded with JSON response: ', data.token); 
+            localStorage.setItem(data.token);
+          })
+          .catch(function(error) {  
+            console.log('Request failed', error);  
+          });
 }

@@ -115,7 +115,7 @@ function addComment() {
   let data={
     bookId: bookId.value,
     commentText: commentTextarea.value
-  }
+  };
   let url = "addComment";
   
   let response = fetch(url, {
@@ -137,26 +137,24 @@ function addComment() {
   commentTextarea.innerHTML='';
 }
 function insertComment(data) {
-  let commentButton='';
-
-    commentButton = 
-            ` <input id="edit_${data.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${data.id})"/>
-              <input id="change_${data.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.changeComment(${data.id})"/>
-            `
+  let commentButton = 
+    ` <input id="edit_${data.id}" class="edit-comment-btn" type="button" value="Редактировать" onclick="window.editComment(${data.id})"/>
+      <input id="change_${data.id}" class="change-comment-btn w-3" type="button" value="Изменить" onclick="window.changeComment(${data.id})"/>
+    `;
 
 
   let commentHTML = 
     `<div class="card-header ">
-              <span class="col-4 my-2 pull-left">
-                ${data.createDate}
-              </span>
-              <span class="col-4  my-2 pull-right">
-                  ${data.user.reader.name} ${data.user.reader.lastname}
-              </span>
-          </div>
-          <div class="card-body min-vh-50">
-            <p id="text_${data.id}" class="card-text">${data.commentText}</p>
-          </div>`;
+        <span class="col-4 my-2 pull-left">
+          ${data.createDate}
+        </span>
+        <span class="col-4  my-2 pull-right">
+            ${data.user.reader.name} ${data.user.reader.lastname}
+        </span>
+    </div>
+    <div class="card-body min-vh-50">
+      <p id="text_${data.id}" class="card-text">${data.commentText}</p>
+    </div>`;
 
   let commentButtonElem = document.createElement("div");
   commentButtonElem.setAttribute("class","col-2 comment-btns pull-right");
@@ -179,9 +177,9 @@ function insertComment(data) {
 document.getElementById("enter").onclick=function(){
     let login = document.getElementById("login").value;
     let password = document.getElementById("password").value;
-    let url = "webresources/loginController/loginRest";
+    let url = 'rest/loginControllerRest/loginRest';
     let token = localStorage.getItem("token");
-    let data = [login,password,token];
+    let data = [token,login,password];
     let response = fetch(url, {
       method: 'POST',
       headers: {
@@ -192,8 +190,9 @@ document.getElementById("enter").onclick=function(){
     response.then(status)  
             .then(json)  
             .then(function(token) {  
-              localStorage.setItem("token",token.data);
-              console.log('Request succeeded with JSON response', token);  
+              localStorage.setItem("token",token.token);
+              console.log('Request succeeded with JSON response', token.token); 
+              fetch("index");
             })
             .catch(function(error) {  
               console.log('Request failed', error);  

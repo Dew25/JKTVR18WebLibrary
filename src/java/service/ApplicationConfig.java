@@ -5,13 +5,13 @@
  */
 package service;
 
-import java.util.Set;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 /**
  *
  * @author Melnikov
  */
-@javax.ws.rs.ApplicationPath("rest")
+@ApplicationPath("rest")
 public class ApplicationConfig extends Application {
 }

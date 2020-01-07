@@ -176,12 +176,12 @@ function insertComment(data) {
   let commentTextarea = document.getElementById("commentTextarea");
   commentTextarea.value = '';
 }
-document.getElementById("enter").onclick = funtion(){
+document.getElementById("enter").onclick = function(){
   let login = document.getElementById("login").value;
   let password = document.getElementById("password").value;
-  let token='';
-  let url = 'loginRest';
-  let data = [login, password, token];
+  let token='TOKEN from JS';
+  let url = 'rest/loginControllerREST/loginRest';
+  let data = [token, login, password];
   let response = fetch(url, {
     method: 'POST',
     headers: {
@@ -198,4 +198,4 @@ document.getElementById("enter").onclick = funtion(){
           .catch(function(error) {  
             console.log('Request failed', error);  
           });
-}
+};
